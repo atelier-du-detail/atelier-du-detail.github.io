@@ -92,24 +92,20 @@ function creerCarteProduit(produit) {
     var btnDisabled = rupture ? ' disabled' : '';
     var btnTexte    = rupture ? 'Epuise' : 'Ajouter';
 
-    var imgStockee = localStorage.getItem('img_' + produit.id);
-    var classeImg  = 'carte-produit-image carte-produit-image--' + produit.categorie + (imgStockee ? ' avec-photo' : '');
-    var styleImg   = imgStockee ? ' style="background-image:url(' + imgStockee + ')"' : '';
-
     article.innerHTML =
         '<a href="produit.html?id=' + produit.id + '" class="carte-produit-lien">' +
-            '<div class="' + classeImg + '"' + styleImg + '>' +
+            '<div class="carte-produit-image carte-produit-image--' + echapperHtml(produit.categorie) + '">' +
                 '<button class="btn-coeur' + (favori ? ' actif' : '') + '" data-id="' + produit.id + '" title="Ajouter aux favoris" aria-label="Favoris">' +
                     (favori ? '&#9829;' : '&#9825;') +
                 '</button>' +
             '</div>' +
         '</a>' +
         '<div class="carte-produit-corps">' +
-            '<span class="carte-produit-categorie">' + produit.categorie + '</span>' +
+            '<span class="carte-produit-categorie">' + echapperHtml(produit.categorie) + '</span>' +
             '<a href="produit.html?id=' + produit.id + '">' +
-                '<h3 class="carte-produit-nom">' + produit.nom + '</h3>' +
+                '<h3 class="carte-produit-nom">' + echapperHtml(produit.nom) + '</h3>' +
             '</a>' +
-            '<p class="carte-produit-description">' + produit.description + '</p>' +
+            '<p class="carte-produit-description">' + echapperHtml(produit.description) + '</p>' +
             '<div class="carte-produit-pied">' +
                 '<span class="carte-produit-prix">' + produit.prix.toFixed(2) + ' &#8364;</span>' +
                 '<button class="btn-ajouter"' + btnDisabled + ' data-id="' + produit.id + '">' +
@@ -118,6 +114,9 @@ function creerCarteProduit(produit) {
                 badgeStock +
             '</div>' +
         '</div>';
+
+    // Appliquer l'image via DOM (securise — pas d'injection HTML)
+    appliquerImageStockee(article.querySelector('.carte-produit-image'), produit.id);
 
     // Bouton coeur favoris
     var btnCoeur = article.querySelector('.btn-coeur');

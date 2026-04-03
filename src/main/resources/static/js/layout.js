@@ -22,9 +22,9 @@ function construireNav() {
         return '<li><a href="' + lien.href + '"' + classe + '>' + lien.label + '</a></li>';
     }).join('');
 
-    var nomPrincipal  = localStorage.getItem('site_nom')      || "L'Atelier";
-    var nomSecondaire = localStorage.getItem('site_sous_nom') || 'du Detail';
-    var annonce       = localStorage.getItem('site_annonce')  || 'Livraison offerte en France metropolitaine des 60 &#8364;';
+    var nomPrincipal  = echapperHtml(localStorage.getItem('site_nom'))      || "L'Atelier";
+    var nomSecondaire = echapperHtml(localStorage.getItem('site_sous_nom')) || 'du Detail';
+    var annonce       = echapperHtml(localStorage.getItem('site_annonce'))  || 'Livraison offerte en France metropolitaine des 60 &#8364;';
 
     return [
         '<div class="barre-annonce">',

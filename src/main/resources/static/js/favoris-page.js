@@ -46,13 +46,9 @@ function creerCarteFavori(produit) {
     article.className = 'carte-produit fade-in';
     var rupture  = produit.stock === 0;
 
-    var imgStockee = localStorage.getItem('img_' + produit.id);
-    var classeImg  = 'carte-produit-image carte-produit-image--' + produit.categorie + (imgStockee ? ' avec-photo' : '');
-    var styleImg   = imgStockee ? ' style="background-image:url(' + imgStockee + ')"' : '';
-
     article.innerHTML =
         '<a href="produit.html?id=' + produit.id + '">' +
-            '<div class="' + classeImg + '"' + styleImg + '></div>' +
+            '<div class="carte-produit-image carte-produit-image--' + echapperHtml(produit.categorie) + '"></div>' +
         '</a>' +
         '<div class="carte-produit-corps">' +
             '<span class="carte-produit-categorie">' + produit.categorie + '</span>' +
@@ -66,6 +62,8 @@ function creerCarteFavori(produit) {
             '</div>' +
             '<button class="btn-retirer-favori" data-id="' + produit.id + '">Retirer des favoris</button>' +
         '</div>';
+
+    appliquerImageStockee(article.querySelector('.carte-produit-image'), produit.id);
 
     var btnAjouter = article.querySelector('.btn-ajouter');
     if (!rupture) {
