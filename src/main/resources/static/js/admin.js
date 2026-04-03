@@ -3,7 +3,9 @@
 // Gestion de l'espace administration.
 // ============================================
 
-var MOT_DE_PASSE_ADMIN = 'cassandra_jibril';
+// Mot de passe stocke sous forme de hash SHA-256 (jamais en clair dans le code).
+// Pour changer le mot de passe : calculer le SHA-256 du nouveau mot de passe et remplacer cette valeur.
+var MOT_DE_PASSE_HASH  = 'b22980535a881fdeb7893f7c7bc6666dd73c52c77cb472c4b77f684ec906e6f8';
 var SESSION_CLE        = 'admin_connecte';
 var PRODUITS_CLE       = 'produits_custom';
 var THEME_CLE          = 'theme_custom';
@@ -49,14 +51,29 @@ function initialiserLogin() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         var saisie = document.getElementById('motdepasse').value;
-        if (saisie === MOT_DE_PASSE_ADMIN) {
-            sessionStorage.setItem(SESSION_CLE, 'true');
-            document.getElementById('groupe-motdepasse').classList.remove('champ-erreur');
-            afficherDashboard();
-        } else {
-            document.getElementById('groupe-motdepasse').classList.add('champ-erreur');
-            document.getElementById('motdepasse').value = '';
-        }
+        var btn    = form.querySelector('.btn-login');
+        btn.disabled = true;
+
+        hashSHA256(saisie).then(function(hash) {
+            btn.disabled = false;
+            if (hash === MOT_DE_PASSE_HASH) {
+                sessionStorage.setItem(SESSION_CLE, 'true');
+                document.getElementById('groupe-motdepasse').classList.remove('champ-erreur');
+                afficherDashboard();
+            } else {
+                document.getElementById('groupe-motdepasse').classList.add('champ-erreur');
+                document.getElementById('motdepasse').value = '';
+            }
+        });
+    });
+}
+
+function hashSHA256(texte) {
+    var data = new TextEncoder().encode(texte);
+    return crypto.subtle.digest('SHA-256', data).then(function(buffer) {
+        return Array.from(new Uint8Array(buffer))
+            .map(function(b) { return b.toString(16).padStart(2, '0'); })
+            .join('');
     });
 }
 
@@ -113,7 +130,7 @@ function chargerTableau() {
                 : '<span class="badge badge--vert">' + p.stock + '</span>';
 
         var imgStockee = localStorage.getItem('img_' + p.id);
-        var cellImg = imgStockee
+        var cellImg = (imgStockee && estImageBase64Valide(imgStockee))
             ? '<td><img src="' + imgStockee + '" class="tableau-thumbnail" alt=""></td>'
             : '<td><div class="tableau-thumbnail-vide"></div></td>';
 

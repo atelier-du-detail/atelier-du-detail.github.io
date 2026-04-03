@@ -212,7 +212,7 @@ function afficherNotif(nomProduit) {
         '<span class="notif-point"></span>' +
         '<div class="notif-texte">' +
             '<span class="notif-titre">Ajoute au panier</span>' +
-            '<span class="notif-nom">' + nomProduit + '</span>' +
+            '<span class="notif-nom">' + echapperHtml(nomProduit) + '</span>' +
         '</div>' +
         '<a href="panier.html" class="notif-voir">Voir le panier</a>';
 
