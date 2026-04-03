@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue — L'Atelier du Detail</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header injecte par layout.js -->
+    <div id="header-container"></div>
+
+    <!-- TITRE PAGE -->
+    <div class="page-titre fade-in">
+        <h1>Notre Catalogue</h1>
+        <p>Choisissez parmi nos pieces selectionnees avec soin</p>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="filtres fade-in">
+        <button class="filtre-btn actif" data-categorie="tous">Tous</button>
+        <button class="filtre-btn" data-categorie="bracelet">Bracelets</button>
+        <button class="filtre-btn" data-categorie="collier">Colliers</button>
+        <button class="filtre-btn" data-categorie="foulard">Foulards</button>
+    </div>
+
+    <!-- BARRE RECHERCHE + TRI -->
+    <div class="catalogue-outils">
+        <input type="search" id="input-recherche" class="input-recherche" placeholder="Rechercher un produit...">
+        <select id="tri-select" class="tri-select">
+            <option value="defaut">Trier par</option>
+            <option value="prix-asc">Prix croissant</option>
+            <option value="prix-desc">Prix decroissant</option>
+            <option value="nom-asc">Nom (A-Z)</option>
+        </select>
+    </div>
+
+    <!-- GRILLE PRODUITS (injectee par catalogue.js) -->
+    <div class="produits-grille" id="produits-grille">
+        <p class="chargement">Chargement des produits...</p>
+    </div>
+
+    <!-- Footer injecte par layout.js -->
+    <div id="footer-container"></div>
+
+    <script src="js/loader.js"></script>
+    <script src="js/produits.js"></script>
+    <script src="js/panier.js"></script>
+    <script src="js/favoris.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/catalogue.js"></script>
+    <script src="js/scroll.js"></script>
+    <script src="js/cookie.js"></script>
+
+</body>
+</html>

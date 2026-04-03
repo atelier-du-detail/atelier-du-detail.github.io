@@ -1,0 +1,411 @@
+/* ============================================
+   ADMIN.CSS
+   Styles de l'interface d'administration.
+   Separe de style.css pour ne pas alourdir
+   la boutique publique.
+   ============================================ */
+
+/* ============================================
+   LOGIN
+   ============================================ */
+
+.admin-body {
+    background-color: #f5f0ed;
+}
+
+.login-ecran {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.login-carte {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 3rem 3.5rem;
+    box-shadow: 0 8px 40px rgba(61,43,43,0.12);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.login-titre {
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--texte-fonce);
+    margin-bottom: 0.3rem;
+}
+
+.login-sous-titre {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--or);
+    margin-bottom: 2.5rem;
+}
+
+.login-carte .champ-groupe {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--texte-fonce);
+    color: var(--blanc);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--or);
+}
+
+/* ============================================
+   DASHBOARD — LAYOUT
+   ============================================ */
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background-color: var(--texte-fonce);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    padding: 0 1.8rem 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-logo .logo-principal {
+    display: block;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--blanc);
+}
+
+.sidebar-logo .logo-secondaire {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--or);
+    margin-top: 2px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0 1rem;
+    gap: 0.3rem;
+}
+
+.sidebar-lien {
+    display: block;
+    padding: 0.7rem 0.8rem;
+    font-size: 0.88rem;
+    color: rgba(242,212,215,0.65);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    letter-spacing: 0.03em;
+}
+
+.sidebar-lien:hover {
+    background-color: rgba(255,255,255,0.07);
+    color: var(--blanc);
+}
+
+.sidebar-lien.actif {
+    background-color: rgba(201,169,110,0.2);
+    color: var(--or);
+}
+
+.sidebar-lien--externe {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+}
+
+.sidebar-lien--externe:hover {
+    color: rgba(255,255,255,0.6);
+    background: none;
+}
+
+.btn-deconnexion {
+    margin: 1.5rem 1rem 0;
+    padding: 0.6rem;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Georgia', serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-deconnexion:hover {
+    border-color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
+}
+
+/* Contenu principal */
+.admin-main {
+    flex: 1;
+    padding: 2.5rem 3rem;
+    overflow-y: auto;
+    background-color: #f5f0ed;
+}
+
+.admin-section {
+    /* visible par defaut ou toglee par JS */
+}
+
+.admin-entete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.admin-entete h2 {
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--texte-fonce);
+}
+
+.admin-vide {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    color: var(--texte-gris);
+    line-height: 2;
+}
+
+/* ============================================
+   BOUTONS ADMIN
+   ============================================ */
+
+.btn-admin-principal {
+    padding: 0.65rem 1.4rem;
+    background-color: var(--texte-fonce);
+    color: var(--blanc);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 0.88rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-admin-principal:hover {
+    background-color: var(--or);
+}
+
+.btn-admin-secondaire {
+    padding: 0.65rem 1.4rem;
+    background-color: transparent;
+    color: var(--texte-gris);
+    border: 1px solid #d8d0ce;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-admin-secondaire:hover {
+    border-color: var(--texte-fonce);
+    color: var(--texte-fonce);
+}
+
+/* ============================================
+   FORMULAIRE AJOUT / EDITION
+   ============================================ */
+
+.formulaire-admin {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(61,43,43,0.06);
+    border-left: 3px solid var(--or);
+}
+
+.formulaire-admin h3 {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--texte-fonce);
+    margin-bottom: 1.5rem;
+}
+
+.admin-form-grille {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.champ-groupe--pleine-largeur {
+    grid-column: 1 / -1;
+}
+
+.formulaire-admin-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+/* ============================================
+   TABLEAU PRODUITS
+   ============================================ */
+
+.admin-tableau-wrapper {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(61,43,43,0.06);
+}
+
+.admin-tableau {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-tableau thead {
+    background-color: #f5f0ed;
+}
+
+.admin-tableau th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--texte-gris);
+    font-weight: normal;
+}
+
+.admin-tableau td {
+    padding: 1rem 1.2rem;
+    border-top: 1px solid #f0ebe8;
+    color: var(--texte-fonce);
+    vertical-align: middle;
+}
+
+.admin-tableau tr:hover td {
+    background-color: #faf7f4;
+}
+
+.td-id {
+    color: var(--texte-gris);
+    font-size: 0.8rem;
+}
+
+.td-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Boutons dans le tableau */
+.btn-table {
+    padding: 0.35rem 0.9rem;
+    border-radius: 20px;
+    font-family: 'Georgia', serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-editer {
+    background-color: transparent;
+    border-color: var(--or);
+    color: var(--or);
+}
+
+.btn-editer:hover {
+    background-color: var(--or);
+    color: var(--blanc);
+}
+
+.btn-supprimer-prod {
+    background-color: transparent;
+    border-color: #e0b4bb;
+    color: var(--rose-fonce);
+}
+
+.btn-supprimer-prod:hover {
+    background-color: var(--rose-fonce);
+    color: var(--blanc);
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+}
+
+.badge--vert   { background-color: #e8f5e9; color: #388e3c; }
+.badge--orange { background-color: #fff3e0; color: #f57c00; }
+.badge--rouge  { background-color: #fce4ec; color: #c62828; }
+
+.badge-categorie {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    text-transform: capitalize;
+}
+
+.badge-categorie--bracelet { background-color: #f2d4d7; color: #c97f8a; }
+.badge-categorie--collier  { background-color: #e8d5b0; color: #8a6a30; }
+.badge-categorie--foulard  { background-color: #d4e8f2; color: #4a7a96; }
+
+/* ============================================
+   RESPONSIVE ADMIN
+   ============================================ */
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .admin-main {
+        padding: 1.5rem;
+    }
+
+    .admin-form-grille {
+        grid-template-columns: 1fr;
+    }
+
+    .champ-groupe--pleine-largeur {
+        grid-column: 1;
+    }
+}

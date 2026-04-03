@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — L'Atelier du Detail</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header injecte par layout.js -->
+    <div id="header-container"></div>
+
+    <div class="contact-section">
+
+        <!-- Informations de contact -->
+        <div class="contact-info fade-in">
+            <h1>Nous contacter</h1>
+            <span class="trait"></span>
+            <p>Une question sur une piece, une commande, ou simplement envie d'en savoir plus sur nos collections ? Nous vous repondons dans les 24 heures.</p>
+
+            <div class="contact-detail">
+                <strong>Email</strong>
+                <span>contact@latelierdudetail.fr</span>
+            </div>
+
+            <div class="contact-detail">
+                <strong>Horaires</strong>
+                <span>Lundi — Vendredi, 9h — 18h</span>
+            </div>
+
+            <div class="contact-detail">
+                <strong>Reponse</strong>
+                <span>Sous 24 heures en jours ouvres</span>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <div class="formulaire-contact fade-in" id="formulaire-container">
+            <h2>Envoyer un message</h2>
+
+            <form id="formulaire-contact" novalidate>
+
+                <div class="champ-groupe" id="groupe-nom">
+                    <label for="nom">Votre nom</label>
+                    <input type="text" id="nom" name="nom" placeholder="Marie Dupont">
+                    <span class="message-erreur">Veuillez entrer votre nom.</span>
+                </div>
+
+                <div class="champ-groupe" id="groupe-email">
+                    <label for="email">Adresse email</label>
+                    <input type="email" id="email" name="email" placeholder="marie@exemple.fr">
+                    <span class="message-erreur">Veuillez entrer une adresse email valide.</span>
+                </div>
+
+                <div class="champ-groupe" id="groupe-sujet">
+                    <label for="sujet">Sujet</label>
+                    <select id="sujet" name="sujet">
+                        <option value="">-- Choisir un sujet --</option>
+                        <option value="commande">Question sur une commande</option>
+                        <option value="produit">Question sur un produit</option>
+                        <option value="retour">Retour ou echange</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                    <span class="message-erreur">Veuillez choisir un sujet.</span>
+                </div>
+
+                <div class="champ-groupe" id="groupe-message">
+                    <label for="message">Votre message</label>
+                    <textarea id="message" name="message" placeholder="Decrivez votre demande..."></textarea>
+                    <span class="message-erreur">Veuillez ecrire votre message.</span>
+                </div>
+
+                <button type="submit" class="btn-envoyer">Envoyer le message</button>
+
+            </form>
+
+            <!-- Message de confirmation apres envoi -->
+            <div class="message-succes" id="message-succes">
+                <h3>Message envoye !</h3>
+                <p>Merci pour votre message. Nous vous repondrons dans les 24 heures.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer injecte par layout.js -->
+    <div id="footer-container"></div>
+
+    <script src="js/loader.js"></script>
+    <script src="js/produits.js"></script>
+    <script src="js/panier.js"></script>
+    <script src="js/favoris.js"></script>
+    <script src="js/layout.js"></script>
+    <script src="js/scroll.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/cookie.js"></script>
+
+</body>
+</html>

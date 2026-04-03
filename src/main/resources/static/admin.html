@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration — L'Atelier du Detail</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+    <!-- ECRAN DE CONNEXION -->
+    <div id="ecran-login" class="login-ecran">
+        <div class="login-carte">
+            <h1 class="login-titre">L'Atelier du Detail</h1>
+            <p class="login-sous-titre">Espace administration</p>
+
+            <form id="formulaire-login" novalidate>
+                <div class="champ-groupe" id="groupe-motdepasse">
+                    <label for="motdepasse">Mot de passe</label>
+                    <input type="password" id="motdepasse" placeholder="••••••••" autocomplete="current-password">
+                    <span class="message-erreur">Mot de passe incorrect.</span>
+                </div>
+                <button type="submit" class="btn-login">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TABLEAU DE BORD (masque jusqu'a connexion) -->
+    <div id="dashboard" class="dashboard" style="display:none">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-principal">L'Atelier</span>
+                <span class="logo-secondaire">Administration</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-lien actif" data-section="produits">Produits</a>
+                <a href="#" class="sidebar-lien" data-section="commandes">Commandes</a>
+                <a href="index.html" class="sidebar-lien sidebar-lien--externe">Voir la boutique</a>
+            </nav>
+            <button class="btn-deconnexion" id="btn-deconnexion">Se deconnecter</button>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="admin-main">
+
+            <!-- SECTION PRODUITS -->
+            <section id="section-produits" class="admin-section">
+
+                <div class="admin-entete">
+                    <h2>Produits</h2>
+                    <button class="btn-admin-principal" id="btn-ouvrir-ajout">+ Ajouter un produit</button>
+                </div>
+
+                <!-- Formulaire ajout / edition (masque par defaut) -->
+                <div class="formulaire-admin" id="formulaire-admin" style="display:none">
+                    <h3 id="titre-formulaire">Ajouter un produit</h3>
+                    <input type="hidden" id="champ-id">
+
+                    <div class="admin-form-grille">
+                        <div class="champ-groupe">
+                            <label for="champ-nom">Nom</label>
+                            <input type="text" id="champ-nom" placeholder="Ex: Bracelet Dore Fin">
+                        </div>
+                        <div class="champ-groupe">
+                            <label for="champ-categorie">Categorie</label>
+                            <select id="champ-categorie">
+                                <option value="bracelet">Bracelet</option>
+                                <option value="collier">Collier</option>
+                                <option value="foulard">Foulard</option>
+                            </select>
+                        </div>
+                        <div class="champ-groupe">
+                            <label for="champ-prix">Prix (EUR)</label>
+                            <input type="number" id="champ-prix" placeholder="29.90" step="0.01" min="0">
+                        </div>
+                        <div class="champ-groupe">
+                            <label for="champ-stock">Stock</label>
+                            <input type="number" id="champ-stock" placeholder="10" min="0">
+                        </div>
+                        <div class="champ-groupe champ-groupe--pleine-largeur">
+                            <label for="champ-description">Description</label>
+                            <textarea id="champ-description" placeholder="Description du produit..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="formulaire-admin-actions">
+                        <button class="btn-admin-principal" id="btn-sauvegarder">Sauvegarder</button>
+                        <button class="btn-admin-secondaire" id="btn-annuler">Annuler</button>
+                    </div>
+                </div>
+
+                <!-- Tableau des produits -->
+                <div class="admin-tableau-wrapper">
+                    <table class="admin-tableau" id="tableau-produits">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Categorie</th>
+                                <th>Prix</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corps-tableau">
+                            <!-- Injecte par admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- SECTION COMMANDES -->
+            <section id="section-commandes" class="admin-section" style="display:none">
+                <div class="admin-entete">
+                    <h2>Commandes</h2>
+                </div>
+                <div class="admin-vide">
+                    <p>Les commandes apparaitront ici une fois le paiement Stripe configure.</p>
+                    <p>Cette section sera completee a l'etape suivante.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="js/produits.js"></script>
+    <script src="js/admin.js"></script>
+
+</body>
+</html>
