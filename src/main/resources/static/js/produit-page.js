@@ -36,6 +36,10 @@ function afficherProduit(produit) {
     else if (stockFaible) badgeStock = '<span class="produit-badge-stock produit-badge-stock--orange">Plus que ' + produit.stock + ' en stock</span>';
     else             badgeStock = '<span class="produit-badge-stock produit-badge-stock--vert">En stock</span>';
 
+    var imgStockee  = localStorage.getItem('img_' + produit.id);
+    var classeImg   = 'produit-image-grande produit-image-grande--' + produit.categorie + (imgStockee ? ' avec-photo' : '');
+    var styleImgGde = imgStockee ? ' style="background-image:url(' + imgStockee + ')"' : '';
+
     var conteneur = document.getElementById('produit-contenu');
     conteneur.innerHTML = [
         '<nav class="fil-ariane fade-in">',
@@ -48,7 +52,7 @@ function afficherProduit(produit) {
 
         '<div class="produit-detail fade-in">',
 
-        '    <div class="produit-image-grande produit-image-grande--' + produit.categorie + '">',
+        '    <div class="' + classeImg + '"' + styleImgGde + '>',
         '        <span class="produit-image-label">' + produit.categorie + '</span>',
         '    </div>',
 

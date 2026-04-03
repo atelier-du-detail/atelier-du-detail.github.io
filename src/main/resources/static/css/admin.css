@@ -389,6 +389,227 @@
 .badge-categorie--foulard  { background-color: #d4e8f2; color: #4a7a96; }
 
 /* ============================================
+   IMAGE UPLOAD
+   ============================================ */
+
+.image-upload-zone {
+    border: 2px dashed #d8d0ce;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload-zone:hover,
+.image-upload-zone.drag-actif {
+    border-color: var(--or);
+    background-color: rgba(184,137,90,0.04);
+}
+
+.image-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.image-upload-label {
+    font-size: 0.88rem;
+    color: var(--texte-gris);
+    pointer-events: none;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.btn-supprimer-image {
+    display: none;
+    margin-top: 0.6rem;
+    padding: 0.4rem 1rem;
+    background: none;
+    border: 1px solid #e0b4bb;
+    border-radius: 20px;
+    color: var(--rose-fonce);
+    font-family: 'Georgia', serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-supprimer-image:hover {
+    background-color: var(--rose-fonce);
+    color: var(--blanc);
+}
+
+.tableau-thumbnail {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: block;
+}
+
+.tableau-thumbnail-vide {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    background-color: #f0ebe8;
+    border: 1px dashed #d8d0ce;
+}
+
+/* ============================================
+   SECTION APPARENCE
+   ============================================ */
+
+.apparence-grille {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.apparence-carte {
+    background-color: var(--blanc);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 2px 12px rgba(61,43,43,0.06);
+}
+
+.apparence-carte:last-child {
+    grid-column: 1 / -1;
+}
+
+.apparence-titre {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--texte-fonce);
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid #f0ebe8;
+}
+
+.couleur-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.couleur-item {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 0.3rem 1rem;
+}
+
+.couleur-item label {
+    font-size: 0.85rem;
+    color: var(--texte-fonce);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.couleur-desc {
+    font-size: 0.72rem;
+    color: var(--texte-gris);
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
+.couleur-input-groupe {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.couleur-input-groupe input[type="color"] {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px;
+    background: none;
+    flex-shrink: 0;
+}
+
+.couleur-valeur {
+    font-size: 0.78rem;
+    color: var(--texte-gris);
+    font-family: monospace;
+}
+
+.police-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.police-option {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    transition: background-color 0.15s ease;
+}
+
+.police-option:hover {
+    background-color: #f5f0ed;
+}
+
+.police-option input[type="radio"] {
+    flex-shrink: 0;
+    accent-color: var(--or);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.police-apercu {
+    font-size: 1rem;
+    color: var(--texte-fonce);
+}
+
+.apparence-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-apercu-lien {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.apparence-confirmation {
+    margin-top: 1rem;
+    padding: 0.8rem 1.2rem;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+
+/* ============================================
    RESPONSIVE ADMIN
    ============================================ */
 

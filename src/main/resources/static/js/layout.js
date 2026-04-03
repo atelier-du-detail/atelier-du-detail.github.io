@@ -22,14 +22,18 @@ function construireNav() {
         return '<li><a href="' + lien.href + '"' + classe + '>' + lien.label + '</a></li>';
     }).join('');
 
+    var nomPrincipal  = localStorage.getItem('site_nom')      || "L'Atelier";
+    var nomSecondaire = localStorage.getItem('site_sous_nom') || 'du Detail';
+    var annonce       = localStorage.getItem('site_annonce')  || 'Livraison offerte en France metropolitaine des 60 &#8364;';
+
     return [
         '<div class="barre-annonce">',
-        '    <p>Livraison offerte en France metropolitaine des 60 &#8364;</p>',
+        '    <p>' + annonce + '</p>',
         '</div>',
         '<nav class="navbar" id="navbar">',
         '    <a href="index.html" class="logo">',
-        '        <span class="logo-principal">L\'Atelier</span>',
-        '        <span class="logo-secondaire">du Detail</span>',
+        '        <span class="logo-principal">' + nomPrincipal + '</span>',
+        '        <span class="logo-secondaire">' + nomSecondaire + '</span>',
         '    </a>',
         '    <ul class="nav-liens">' + liens + '</ul>',
         '    <div class="nav-icones">',

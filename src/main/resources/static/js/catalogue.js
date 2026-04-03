@@ -92,9 +92,13 @@ function creerCarteProduit(produit) {
     var btnDisabled = rupture ? ' disabled' : '';
     var btnTexte    = rupture ? 'Epuise' : 'Ajouter';
 
+    var imgStockee = localStorage.getItem('img_' + produit.id);
+    var classeImg  = 'carte-produit-image carte-produit-image--' + produit.categorie + (imgStockee ? ' avec-photo' : '');
+    var styleImg   = imgStockee ? ' style="background-image:url(' + imgStockee + ')"' : '';
+
     article.innerHTML =
         '<a href="produit.html?id=' + produit.id + '" class="carte-produit-lien">' +
-            '<div class="carte-produit-image carte-produit-image--' + produit.categorie + '">' +
+            '<div class="' + classeImg + '"' + styleImg + '>' +
                 '<button class="btn-coeur' + (favori ? ' actif' : '') + '" data-id="' + produit.id + '" title="Ajouter aux favoris" aria-label="Favoris">' +
                     (favori ? '&#9829;' : '&#9825;') +
                 '</button>' +

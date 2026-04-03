@@ -29,7 +29,7 @@ html {
 }
 
 body {
-    font-family: 'Georgia', serif;
+    font-family: var(--police, 'Georgia', serif);
     background-color: var(--blanc-casse);
     color: var(--texte-fonce);
     line-height: 1.6;
@@ -549,6 +549,20 @@ a {
 
 /* supprime l'ancien label texte */
 .carte-placeholder-label { display: none; }
+
+/* Quand une vraie photo est injectee, masque les pseudo-elements */
+.carte-produit-image.avec-photo::before,
+.carte-produit-image.avec-photo::after,
+.produit-image-grande.avec-photo::before,
+.produit-image-grande.avec-photo::after {
+    display: none;
+}
+
+.carte-produit-image.avec-photo,
+.produit-image-grande.avec-photo {
+    background-size: cover;
+    background-position: center;
+}
 
 .carte-produit-corps {
     padding: 1.4rem;

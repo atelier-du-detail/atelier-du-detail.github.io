@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <!-- TABLEAU DE BORD (masque jusqu'a connexion) -->
+    <!-- TABLEAU DE BORD -->
     <div id="dashboard" class="dashboard" style="display:none">
 
         <!-- Sidebar -->
@@ -37,8 +37,9 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="#" class="sidebar-lien actif" data-section="produits">Produits</a>
+                <a href="#" class="sidebar-lien" data-section="apparence">Apparence</a>
                 <a href="#" class="sidebar-lien" data-section="commandes">Commandes</a>
-                <a href="index.html" class="sidebar-lien sidebar-lien--externe">Voir la boutique</a>
+                <a href="index.html" class="sidebar-lien sidebar-lien--externe" target="_blank">Voir la boutique</a>
             </nav>
             <button class="btn-deconnexion" id="btn-deconnexion">Se deconnecter</button>
         </aside>
@@ -46,7 +47,9 @@
         <!-- Contenu principal -->
         <main class="admin-main">
 
-            <!-- SECTION PRODUITS -->
+            <!-- ==============================
+                 SECTION PRODUITS
+                 ============================== -->
             <section id="section-produits" class="admin-section">
 
                 <div class="admin-entete">
@@ -54,7 +57,7 @@
                     <button class="btn-admin-principal" id="btn-ouvrir-ajout">+ Ajouter un produit</button>
                 </div>
 
-                <!-- Formulaire ajout / edition (masque par defaut) -->
+                <!-- Formulaire ajout / edition -->
                 <div class="formulaire-admin" id="formulaire-admin" style="display:none">
                     <h3 id="titre-formulaire">Ajouter un produit</h3>
                     <input type="hidden" id="champ-id">
@@ -84,6 +87,21 @@
                             <label for="champ-description">Description</label>
                             <textarea id="champ-description" placeholder="Description du produit..."></textarea>
                         </div>
+
+                        <!-- IMAGE PRODUIT -->
+                        <div class="champ-groupe champ-groupe--pleine-largeur">
+                            <label>Image du produit</label>
+                            <div class="image-upload-zone" id="image-upload-zone">
+                                <input type="file" id="champ-image" accept="image/*" class="image-input">
+                                <div class="image-upload-label" id="image-upload-label">
+                                    Cliquer pour choisir une photo (JPG, PNG)
+                                </div>
+                                <img id="image-preview" class="image-preview" alt="Apercu" style="display:none">
+                            </div>
+                            <button type="button" class="btn-supprimer-image" id="btn-supprimer-image" style="display:none">
+                                Supprimer l'image
+                            </button>
+                        </div>
                     </div>
 
                     <div class="formulaire-admin-actions">
@@ -98,6 +116,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Image</th>
                                 <th>Nom</th>
                                 <th>Categorie</th>
                                 <th>Prix</th>
@@ -105,15 +124,133 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="corps-tableau">
-                            <!-- Injecte par admin.js -->
-                        </tbody>
+                        <tbody id="corps-tableau"></tbody>
                     </table>
                 </div>
 
             </section>
 
-            <!-- SECTION COMMANDES -->
+            <!-- ==============================
+                 SECTION APPARENCE
+                 ============================== -->
+            <section id="section-apparence" class="admin-section" style="display:none">
+
+                <div class="admin-entete">
+                    <h2>Apparence</h2>
+                </div>
+
+                <div class="apparence-grille">
+
+                    <!-- Couleurs -->
+                    <div class="apparence-carte">
+                        <h3 class="apparence-titre">Couleurs</h3>
+
+                        <div class="couleur-liste">
+                            <div class="couleur-item">
+                                <label>Couleur principale</label>
+                                <div class="couleur-input-groupe">
+                                    <input type="color" id="color-rose-fonce" value="#9b3d52">
+                                    <span class="couleur-valeur" id="val-rose-fonce">#9b3d52</span>
+                                </div>
+                                <span class="couleur-desc">Prix, badges, bouton commander</span>
+                            </div>
+                            <div class="couleur-item">
+                                <label>Couleur doree</label>
+                                <div class="couleur-input-groupe">
+                                    <input type="color" id="color-or" value="#b8895a">
+                                    <span class="couleur-valeur" id="val-or">#b8895a</span>
+                                </div>
+                                <span class="couleur-desc">Logo, soulignements, highlights</span>
+                            </div>
+                            <div class="couleur-item">
+                                <label>Fond de page</label>
+                                <div class="couleur-input-groupe">
+                                    <input type="color" id="color-fond" value="#fdf8f5">
+                                    <span class="couleur-valeur" id="val-fond">#fdf8f5</span>
+                                </div>
+                                <span class="couleur-desc">Arriere-plan general</span>
+                            </div>
+                            <div class="couleur-item">
+                                <label>Couleur du texte</label>
+                                <div class="couleur-input-groupe">
+                                    <input type="color" id="color-texte" value="#22101a">
+                                    <span class="couleur-valeur" id="val-texte">#22101a</span>
+                                </div>
+                                <span class="couleur-desc">Titres, texte principal</span>
+                            </div>
+                            <div class="couleur-item">
+                                <label>Rose clair</label>
+                                <div class="couleur-input-groupe">
+                                    <input type="color" id="color-rose-poudre" value="#f5e6e8">
+                                    <span class="couleur-valeur" id="val-rose-poudre">#f5e6e8</span>
+                                </div>
+                                <span class="couleur-desc">Fonds doux, hero, filtres</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Police -->
+                    <div class="apparence-carte">
+                        <h3 class="apparence-titre">Police d'ecriture</h3>
+                        <div class="police-liste">
+                            <label class="police-option">
+                                <input type="radio" name="police" value="Georgia, serif" checked>
+                                <span class="police-apercu" style="font-family: Georgia, serif">Georgia — Elegant et classique</span>
+                            </label>
+                            <label class="police-option">
+                                <input type="radio" name="police" value="'Palatino Linotype', Palatino, serif">
+                                <span class="police-apercu" style="font-family: 'Palatino Linotype', Palatino, serif">Palatino — Raffine et lisible</span>
+                            </label>
+                            <label class="police-option">
+                                <input type="radio" name="police" value="Garamond, 'EB Garamond', serif">
+                                <span class="police-apercu" style="font-family: Garamond, serif">Garamond — Traditionnel et delicat</span>
+                            </label>
+                            <label class="police-option">
+                                <input type="radio" name="police" value="'Book Antiqua', Palatino, serif">
+                                <span class="police-apercu" style="font-family: 'Book Antiqua', Palatino, serif">Book Antiqua — Doux et feminin</span>
+                            </label>
+                            <label class="police-option">
+                                <input type="radio" name="police" value="'Times New Roman', Times, serif">
+                                <span class="police-apercu" style="font-family: 'Times New Roman', Times, serif">Times New Roman — sobre et net</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Textes du site -->
+                    <div class="apparence-carte">
+                        <h3 class="apparence-titre">Textes du site</h3>
+                        <div class="champ-groupe">
+                            <label for="champ-nom-site">Nom principal (logo)</label>
+                            <input type="text" id="champ-nom-site" placeholder="L'Atelier">
+                        </div>
+                        <div class="champ-groupe">
+                            <label for="champ-sous-nom">Sous-titre logo</label>
+                            <input type="text" id="champ-sous-nom" placeholder="du Detail">
+                        </div>
+                        <div class="champ-groupe">
+                            <label for="champ-annonce">Barre d'annonce</label>
+                            <input type="text" id="champ-annonce" placeholder="Livraison offerte des 60 EUR">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="apparence-actions">
+                    <button class="btn-admin-principal" id="btn-sauvegarder-theme">Sauvegarder le theme</button>
+                    <button class="btn-admin-secondaire" id="btn-reinitialiser-theme">Reinitialiser par defaut</button>
+                    <a href="index.html" target="_blank" class="btn-admin-secondaire btn-apercu-lien">Voir la boutique</a>
+                </div>
+
+                <div class="apparence-confirmation" id="apparence-confirmation" style="display:none">
+                    Theme sauvegarde. Les modifications sont visibles sur la boutique.
+                </div>
+
+            </section>
+
+            <!-- ==============================
+                 SECTION COMMANDES
+                 ============================== -->
             <section id="section-commandes" class="admin-section" style="display:none">
                 <div class="admin-entete">
                     <h2>Commandes</h2>

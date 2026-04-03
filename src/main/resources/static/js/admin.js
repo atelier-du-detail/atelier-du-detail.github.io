@@ -1,19 +1,16 @@
 // ============================================
 // ADMIN.JS
 // Gestion de l'espace administration.
-// Authentification par mot de passe (JS),
-// CRUD produits sauvegarde dans localStorage.
 // ============================================
 
 var MOT_DE_PASSE_ADMIN = 'cassandra_jibril';
 var SESSION_CLE        = 'admin_connecte';
 var PRODUITS_CLE       = 'produits_custom';
+var THEME_CLE          = 'theme_custom';
 
-// L'id le plus eleve, pour generer le prochain
-var prochainId;
-
-// Produits en cours d'edition (null = ajout)
-var idEnEdition = null;
+var prochainId   = 1;
+var idEnEdition  = null;
+var imageEnCours = null; // base64 ou null (pas de changement) ou '' (suppression)
 
 // ============================================
 // DEMARRAGE
@@ -29,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initialiserLogin();
     initialiserNavigation();
     initialiserBoutons();
+    initialiserApparence();
 });
 
 // ============================================
@@ -51,7 +49,6 @@ function initialiserLogin() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         var saisie = document.getElementById('motdepasse').value;
-
         if (saisie === MOT_DE_PASSE_ADMIN) {
             sessionStorage.setItem(SESSION_CLE, 'true');
             document.getElementById('groupe-motdepasse').classList.remove('champ-erreur');
@@ -73,13 +70,11 @@ function initialiserNavigation() {
             e.preventDefault();
             var cible = lien.getAttribute('data-section');
 
-            // Activer le bon lien
             document.querySelectorAll('.sidebar-lien').forEach(function(l) {
                 l.classList.remove('actif');
             });
             lien.classList.add('actif');
 
-            // Afficher la bonne section
             document.querySelectorAll('.admin-section').forEach(function(s) {
                 s.style.display = 'none';
             });
@@ -101,13 +96,12 @@ function chargerTableau() {
     var produits = lireProduits();
     var corps    = document.getElementById('corps-tableau');
 
-    // Calculer le prochain id disponible
     prochainId = produits.reduce(function(max, p) {
         return p.id > max ? p.id : max;
     }, 0) + 1;
 
     if (produits.length === 0) {
-        corps.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#7a6a6a;padding:2rem">Aucun produit.</td></tr>';
+        corps.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#7a6a6a;padding:2rem">Aucun produit.</td></tr>';
         return;
     }
 
@@ -118,9 +112,15 @@ function chargerTableau() {
                 ? '<span class="badge badge--orange">' + p.stock + '</span>'
                 : '<span class="badge badge--vert">' + p.stock + '</span>';
 
+        var imgStockee = localStorage.getItem('img_' + p.id);
+        var cellImg = imgStockee
+            ? '<td><img src="' + imgStockee + '" class="tableau-thumbnail" alt=""></td>'
+            : '<td><div class="tableau-thumbnail-vide"></div></td>';
+
         return [
             '<tr>',
             '    <td class="td-id">' + p.id + '</td>',
+            cellImg,
             '    <td>' + p.nom + '</td>',
             '    <td><span class="badge-categorie badge-categorie--' + p.categorie + '">' + p.categorie + '</span></td>',
             '    <td>' + p.prix.toFixed(2) + ' &#8364;</td>',
@@ -133,7 +133,6 @@ function chargerTableau() {
         ].join('');
     }).join('');
 
-    // Ecouter les boutons du tableau
     document.querySelectorAll('.btn-editer').forEach(function(btn) {
         btn.addEventListener('click', function() {
             ouvrirEdition(parseInt(btn.getAttribute('data-id')));
@@ -155,10 +154,12 @@ function initialiserBoutons() {
     document.getElementById('btn-ouvrir-ajout').addEventListener('click', ouvrirAjout);
     document.getElementById('btn-annuler').addEventListener('click', fermerFormulaire);
     document.getElementById('btn-sauvegarder').addEventListener('click', sauvegarder);
+    initialiserImageUpload();
 }
 
 function ouvrirAjout() {
-    idEnEdition = null;
+    idEnEdition  = null;
+    imageEnCours = null;
     document.getElementById('titre-formulaire').textContent = 'Ajouter un produit';
     viderFormulaire();
     document.getElementById('formulaire-admin').style.display = 'block';
@@ -170,7 +171,9 @@ function ouvrirEdition(id) {
     var produit  = produits.find(function(p) { return p.id === id; });
     if (!produit) return;
 
-    idEnEdition = id;
+    idEnEdition  = id;
+    imageEnCours = null; // pas de changement par defaut
+
     document.getElementById('titre-formulaire').textContent = 'Modifier le produit';
     document.getElementById('champ-id').value          = produit.id;
     document.getElementById('champ-nom').value         = produit.nom;
@@ -179,6 +182,14 @@ function ouvrirEdition(id) {
     document.getElementById('champ-stock').value       = produit.stock;
     document.getElementById('champ-description').value = produit.description;
 
+    // Charger l'image existante si dispo
+    var imgStockee = localStorage.getItem('img_' + id);
+    if (imgStockee) {
+        afficherPreviewImage(imgStockee);
+    } else {
+        reinitialiserPreviewImage();
+    }
+
     document.getElementById('formulaire-admin').style.display = 'block';
     document.getElementById('formulaire-admin').scrollIntoView({ behavior: 'smooth' });
 }
@@ -186,7 +197,8 @@ function ouvrirEdition(id) {
 function fermerFormulaire() {
     document.getElementById('formulaire-admin').style.display = 'none';
     viderFormulaire();
-    idEnEdition = null;
+    idEnEdition  = null;
+    imageEnCours = null;
 }
 
 function viderFormulaire() {
@@ -196,6 +208,7 @@ function viderFormulaire() {
     document.getElementById('champ-prix').value        = '';
     document.getElementById('champ-stock').value       = '';
     document.getElementById('champ-description').value = '';
+    reinitialiserPreviewImage();
 }
 
 function sauvegarder() {
@@ -213,7 +226,6 @@ function sauvegarder() {
     var produits = lireProduits();
 
     if (idEnEdition === null) {
-        // Ajout
         produits.push({
             id:          prochainId,
             nom:         nom,
@@ -223,8 +235,11 @@ function sauvegarder() {
             image:       categorie + '-' + prochainId + '.jpg',
             stock:       stock
         });
+        // Sauvegarder l'image si fournie
+        if (imageEnCours) {
+            localStorage.setItem('img_' + prochainId, imageEnCours);
+        }
     } else {
-        // Edition
         for (var i = 0; i < produits.length; i++) {
             if (produits[i].id === idEnEdition) {
                 produits[i].nom         = nom;
@@ -235,6 +250,12 @@ function sauvegarder() {
                 break;
             }
         }
+        // Mettre a jour l'image
+        if (imageEnCours === '') {
+            localStorage.removeItem('img_' + idEnEdition);
+        } else if (imageEnCours) {
+            localStorage.setItem('img_' + idEnEdition, imageEnCours);
+        }
     }
 
     sauvegarderProduits(produits);
@@ -244,14 +265,200 @@ function sauvegarder() {
 
 function supprimerProduit(id) {
     if (!confirm('Supprimer ce produit ? Cette action est irreversible.')) return;
-
+    localStorage.removeItem('img_' + id);
     var produits = lireProduits().filter(function(p) { return p.id !== id; });
     sauvegarderProduits(produits);
     chargerTableau();
 }
 
 // ============================================
-// PERSISTANCE
+// IMAGE UPLOAD
+// ============================================
+
+function initialiserImageUpload() {
+    var zone   = document.getElementById('image-upload-zone');
+    var input  = document.getElementById('champ-image');
+    var btnSup = document.getElementById('btn-supprimer-image');
+
+    zone.addEventListener('click', function() { input.click(); });
+
+    input.addEventListener('change', function() {
+        var fichier = input.files[0];
+        if (!fichier) return;
+        compresserImage(fichier, function(base64) {
+            imageEnCours = base64;
+            afficherPreviewImage(base64);
+        });
+    });
+
+    // Drag & drop
+    zone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        zone.classList.add('drag-actif');
+    });
+    zone.addEventListener('dragleave', function() {
+        zone.classList.remove('drag-actif');
+    });
+    zone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        zone.classList.remove('drag-actif');
+        var fichier = e.dataTransfer.files[0];
+        if (!fichier || !fichier.type.startsWith('image/')) return;
+        compresserImage(fichier, function(base64) {
+            imageEnCours = base64;
+            afficherPreviewImage(base64);
+        });
+    });
+
+    btnSup.addEventListener('click', function() {
+        imageEnCours = ''; // marquer comme supprimee
+        reinitialiserPreviewImage();
+    });
+}
+
+function compresserImage(fichier, callback) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var max    = 900;
+            var scale  = Math.min(1, max / Math.max(img.width, img.height));
+            canvas.width  = Math.round(img.width  * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            callback(canvas.toDataURL('image/jpeg', 0.78));
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(fichier);
+}
+
+function afficherPreviewImage(src) {
+    var preview = document.getElementById('image-preview');
+    var label   = document.getElementById('image-upload-label');
+    var btnSup  = document.getElementById('btn-supprimer-image');
+    preview.src          = src;
+    preview.style.display = 'block';
+    label.style.display   = 'none';
+    btnSup.style.display  = 'inline-block';
+}
+
+function reinitialiserPreviewImage() {
+    var preview = document.getElementById('image-preview');
+    var label   = document.getElementById('image-upload-label');
+    var btnSup  = document.getElementById('btn-supprimer-image');
+    var input   = document.getElementById('champ-image');
+    preview.src           = '';
+    preview.style.display = 'none';
+    label.style.display   = 'block';
+    btnSup.style.display  = 'none';
+    input.value           = '';
+}
+
+// ============================================
+// APPARENCE
+// ============================================
+
+function initialiserApparence() {
+    chargerThemeExistant();
+
+    // Color pickers — mise a jour en direct
+    var pickers = [
+        { id: 'color-rose-fonce',  val: 'val-rose-fonce',  variable: '--rose-fonce'  },
+        { id: 'color-or',          val: 'val-or',          variable: '--or'          },
+        { id: 'color-fond',        val: 'val-fond',        variable: '--blanc-casse' },
+        { id: 'color-texte',       val: 'val-texte',       variable: '--texte-fonce' },
+        { id: 'color-rose-poudre', val: 'val-rose-poudre', variable: '--rose-poudre' }
+    ];
+
+    pickers.forEach(function(p) {
+        var input = document.getElementById(p.id);
+        var span  = document.getElementById(p.val);
+        if (!input) return;
+        input.addEventListener('input', function() {
+            span.textContent = input.value;
+        });
+    });
+
+    document.getElementById('btn-sauvegarder-theme').addEventListener('click', function() {
+        var theme = {};
+
+        pickers.forEach(function(p) {
+            theme[p.variable] = document.getElementById(p.id).value;
+        });
+
+        // Police
+        var policeChoisie = document.querySelector('input[name="police"]:checked');
+        if (policeChoisie) theme['--police'] = policeChoisie.value;
+
+        // Textes
+        var nomSite  = document.getElementById('champ-nom-site').value.trim();
+        var sousNom  = document.getElementById('champ-sous-nom').value.trim();
+        var annonce  = document.getElementById('champ-annonce').value.trim();
+        if (nomSite) localStorage.setItem('site_nom', nomSite);
+        else         localStorage.removeItem('site_nom');
+        if (sousNom) localStorage.setItem('site_sous_nom', sousNom);
+        else         localStorage.removeItem('site_sous_nom');
+        if (annonce) localStorage.setItem('site_annonce', annonce);
+        else         localStorage.removeItem('site_annonce');
+
+        localStorage.setItem(THEME_CLE, JSON.stringify(theme));
+
+        var conf = document.getElementById('apparence-confirmation');
+        conf.style.display = 'block';
+        setTimeout(function() { conf.style.display = 'none'; }, 3000);
+    });
+
+    document.getElementById('btn-reinitialiser-theme').addEventListener('click', function() {
+        if (!confirm('Reinitialiser toutes les couleurs et polices par defaut ?')) return;
+        localStorage.removeItem(THEME_CLE);
+        localStorage.removeItem('site_nom');
+        localStorage.removeItem('site_sous_nom');
+        localStorage.removeItem('site_annonce');
+        location.reload();
+    });
+}
+
+function chargerThemeExistant() {
+    var donnees = localStorage.getItem(THEME_CLE);
+    var theme   = donnees ? JSON.parse(donnees) : {};
+
+    var map = {
+        '--rose-fonce':  'color-rose-fonce',
+        '--or':          'color-or',
+        '--blanc-casse': 'color-fond',
+        '--texte-fonce': 'color-texte',
+        '--rose-poudre': 'color-rose-poudre'
+    };
+
+    Object.keys(map).forEach(function(variable) {
+        var input = document.getElementById(map[variable]);
+        var span  = document.getElementById('val-' + map[variable].replace('color-', ''));
+        if (input && theme[variable]) {
+            input.value = theme[variable];
+            if (span) span.textContent = theme[variable];
+        }
+    });
+
+    // Police
+    if (theme['--police']) {
+        document.querySelectorAll('input[name="police"]').forEach(function(radio) {
+            if (radio.value === theme['--police']) radio.checked = true;
+        });
+    }
+
+    // Textes
+    var nomSite = localStorage.getItem('site_nom');
+    var sousNom = localStorage.getItem('site_sous_nom');
+    var annonce = localStorage.getItem('site_annonce');
+    if (nomSite) document.getElementById('champ-nom-site').value = nomSite;
+    if (sousNom) document.getElementById('champ-sous-nom').value = sousNom;
+    if (annonce) document.getElementById('champ-annonce').value  = annonce;
+}
+
+// ============================================
+// PERSISTANCE PRODUITS
 // ============================================
 
 function lireProduits() {
@@ -259,7 +466,6 @@ function lireProduits() {
     if (stockCustom) {
         try { return JSON.parse(stockCustom); } catch (e) {}
     }
-    // Pas encore de version custom : on part de la liste par defaut
     return PRODUITS_DEFAUT.map(function(p) { return Object.assign({}, p); });
 }
 
