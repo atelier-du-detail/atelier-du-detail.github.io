@@ -229,7 +229,10 @@ function ecouterBoutons() {
     var btnCommander = document.getElementById('btn-commander');
     if (btnCommander) {
         btnCommander.addEventListener('click', function() {
-            alert('Paiement Stripe disponible dans la prochaine etape.');
+            // Sauvegarder la remise active pour la recuperer sur caisse.html
+            var remise = codePromoActif ? getPanierTotal() * CODES_PROMO[codePromoActif].remise : 0;
+            sessionStorage.setItem('caisse_remise', remise.toFixed(2));
+            window.location.href = 'caisse.html';
         });
     }
 }

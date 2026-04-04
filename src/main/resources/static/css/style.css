@@ -2477,3 +2477,425 @@ a {
         gap: 1rem;
     }
 }
+
+/* ============================================
+   PAGE CAISSE (CHECKOUT)
+   ============================================ */
+
+.caisse-section {
+    max-width: 1100px;
+    margin: 0 auto 4rem;
+    padding: 0 1.5rem;
+}
+
+.caisse-grille {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.caisse-card {
+    background: #fff;
+    border: 1px solid #e8d5d8;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.caisse-card--paiement {
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.caisse-card--recap {
+    position: sticky;
+    top: 100px;
+}
+
+.caisse-titre {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--texte-fonce, #22101a);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0e0e3;
+}
+
+.caisse-ligne-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.caisse-champ {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.caisse-champ label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--texte-fonce, #22101a);
+    letter-spacing: 0.02em;
+}
+
+.caisse-input {
+    padding: 0.7rem 1rem;
+    border: 1.5px solid #e8d5d8;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: var(--police, Georgia, serif);
+    color: var(--texte-fonce, #22101a);
+    background: #fff;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.caisse-input:focus {
+    border-color: var(--rose-fonce, #9b3d52);
+}
+
+/* Stripe element wrapper */
+#stripe-payment-element {
+    margin-top: 0.5rem;
+}
+
+.stripe-chargement {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #7a6a6a;
+    font-size: 0.9rem;
+    padding: 1rem 0;
+}
+
+.stripe-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e8d5d8;
+    border-top-color: var(--rose-fonce, #9b3d52);
+    border-radius: 50%;
+    animation: spinnerTour 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spinnerTour {
+    to { transform: rotate(360deg); }
+}
+
+.stripe-indisponible {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #7a6a6a;
+}
+
+.stripe-indisponible-icone {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.stripe-indisponible h3 {
+    font-size: 1.1rem;
+    color: var(--texte-fonce, #22101a);
+    margin-bottom: 0.5rem;
+}
+
+.stripe-indisponible-contact {
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+    color: var(--texte-fonce, #22101a);
+}
+
+.btn-payer {
+    width: 100%;
+    padding: 1rem;
+    background: var(--rose-fonce, #9b3d52);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-family: var(--police, Georgia, serif);
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background 0.2s, opacity 0.2s;
+    letter-spacing: 0.03em;
+}
+
+.btn-payer:hover:not(:disabled) {
+    background: #7d2f42;
+}
+
+.btn-payer:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.caisse-securite {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #7a6a6a;
+    margin-top: 0.75rem;
+}
+
+.caisse-erreur {
+    background: #fdf0f0;
+    border: 1px solid #e8c5c5;
+    border-radius: 6px;
+    color: #c0392b;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    margin-top: 1rem;
+}
+
+/* Recap articles colonne droite */
+.recap-article {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f5eaec;
+}
+
+.recap-article:last-child {
+    border-bottom: none;
+}
+
+.recap-article-image {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--rose-poudre, #f5e6e8);
+    flex-shrink: 0;
+}
+
+.recap-image--bracelet { background: #f5e6e8; }
+.recap-image--collier  { background: #e8f0e8; }
+.recap-image--foulard  { background: #f0ebe0; }
+
+.recap-article-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.recap-article-nom {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--texte-fonce, #22101a);
+}
+
+.recap-article-qte {
+    font-size: 0.78rem;
+    color: #7a6a6a;
+}
+
+.recap-article-prix {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--rose-fonce, #9b3d52);
+    white-space: nowrap;
+}
+
+.caisse-recap-lignes {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0e0e3;
+}
+
+.recap-caisse-ligne {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #5a4a4a;
+    padding: 0.35rem 0;
+}
+
+.recap-caisse-ligne--remise {
+    color: #27ae60;
+}
+
+.recap-caisse-ligne--total {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--texte-fonce, #22101a);
+    border-top: 1px solid #e8d5d8;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+}
+
+.caisse-modifier {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--rose-fonce, #9b3d52);
+    text-decoration: underline;
+    margin-top: 1rem;
+}
+
+/* ============================================
+   PAGE CONFIRMATION
+   ============================================ */
+
+.confirmation-section {
+    max-width: 600px;
+    margin: 2rem auto 5rem;
+    padding: 0 1.5rem;
+}
+
+.confirmation-chargement {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 0;
+}
+
+.confirmation-carte {
+    background: #fff;
+    border: 1px solid #e8d5d8;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+}
+
+.conf-icone {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+}
+
+.conf-icone--succes {
+    background: #e8f5e9;
+    color: #27ae60;
+}
+
+.conf-icone--traitement {
+    background: #fff8e1;
+    color: #f39c12;
+}
+
+.conf-icone--echec {
+    background: #fdf0f0;
+    color: #c0392b;
+}
+
+.conf-titre {
+    font-size: 1.6rem;
+    color: var(--texte-fonce, #22101a);
+    margin-bottom: 0.5rem;
+}
+
+.conf-sous-titre {
+    font-size: 1rem;
+    color: #5a4a4a;
+    margin-bottom: 1.5rem;
+}
+
+.conf-ref {
+    background: var(--rose-poudre, #f5e6e8);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+    color: #7a6a6a;
+    display: inline-block;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.conf-email {
+    font-size: 0.88rem;
+    color: #7a6a6a;
+    margin-bottom: 1.5rem;
+}
+
+.conf-articles {
+    background: #fdf8f5;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.conf-article {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: #5a4a4a;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #f0e0e3;
+}
+
+.conf-article:last-child {
+    border-bottom: none;
+}
+
+.conf-article--total {
+    font-weight: 700;
+    color: var(--texte-fonce, #22101a);
+    padding-top: 0.6rem;
+    border-top: 1px solid #e8d5d8;
+    margin-top: 0.25rem;
+}
+
+.conf-livraison {
+    font-size: 0.9rem;
+    color: #5a4a4a;
+    margin-bottom: 2rem;
+}
+
+.conf-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-secondaire {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border: 1.5px solid var(--rose-fonce, #9b3d52);
+    color: var(--rose-fonce, #9b3d52);
+    border-radius: 8px;
+    font-family: var(--police, Georgia, serif);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-secondaire:hover {
+    background: var(--rose-fonce, #9b3d52);
+    color: #fff;
+}
+
+/* ============================================
+   RESPONSIVE CAISSE
+   ============================================ */
+
+@media (max-width: 860px) {
+    .caisse-grille {
+        grid-template-columns: 1fr;
+    }
+
+    .caisse-card--recap {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .caisse-ligne-double {
+        grid-template-columns: 1fr;
+    }
+
+    .confirmation-carte {
+        padding: 2rem 1.25rem;
+    }
+}
