@@ -609,36 +609,6 @@
     font-size: 0.88rem;
 }
 
-.sauvegarde-explication {
-    font-size: 0.88rem;
-    color: var(--texte-gris);
-    line-height: 1.55;
-    margin-bottom: 1.2rem;
-}
-
-.sauvegarde-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.sauvegarde-message {
-    margin-top: 1rem;
-    padding: 0.8rem 1.2rem;
-    border-radius: 8px;
-    font-size: 0.88rem;
-}
-
-.sauvegarde-message--succes {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.sauvegarde-message--erreur {
-    background-color: #fdecea;
-    color: #b3261e;
-}
-
 /* ============================================
    RESPONSIVE ADMIN
    ============================================ */
