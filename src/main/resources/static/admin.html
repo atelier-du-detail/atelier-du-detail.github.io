@@ -233,6 +233,22 @@
                         </div>
                     </div>
 
+                    <!-- Sauvegarde / Restauration -->
+                    <div class="apparence-carte">
+                        <h3 class="apparence-titre">Sauvegarde de votre travail</h3>
+                        <p class="sauvegarde-explication">
+                            Vos modifications (produits, photos, couleurs, textes) sont stockees dans ce navigateur.
+                            Pour ne rien perdre en cas de changement d'ordinateur, exportez regulierement votre travail
+                            dans un fichier que vous pourrez reimporter plus tard.
+                        </p>
+                        <div class="sauvegarde-actions">
+                            <button class="btn-admin-principal" id="btn-exporter-config">Exporter ma configuration</button>
+                            <button class="btn-admin-secondaire" id="btn-importer-config">Importer une configuration</button>
+                            <input type="file" id="champ-import-config" accept="application/json,.json" style="display:none">
+                        </div>
+                        <div class="sauvegarde-message" id="sauvegarde-message" style="display:none"></div>
+                    </div>
+
                 </div>
 
                 <!-- Actions -->
@@ -264,6 +280,10 @@
         </main>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/produits.js"></script>
     <script src="js/admin.js"></script>

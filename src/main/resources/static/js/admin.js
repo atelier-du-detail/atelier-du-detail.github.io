@@ -3,10 +3,10 @@
 // Gestion de l'espace administration.
 // ============================================
 
-// Mot de passe stocke sous forme de hash SHA-256 (jamais en clair dans le code).
-// Pour changer le mot de passe : calculer le SHA-256 du nouveau mot de passe et remplacer cette valeur.
-var MOT_DE_PASSE_HASH  = 'b22980535a881fdeb7893f7c7bc6666dd73c52c77cb472c4b77f684ec906e6f8';
-var SESSION_CLE        = 'admin_connecte';
+// Authentification via Firebase Auth. L'email est hardcode :
+// Cassandra ne tape que le mot de passe, comme avant.
+// Le mot de passe Firebase est defini dans la console Firebase, pas dans ce code.
+var EMAIL_ADMIN        = 'abonnessansvideos620@gmail.com';
 var PRODUITS_CLE       = 'produits_custom';
 var THEME_CLE          = 'theme_custom';
 
@@ -19,16 +19,31 @@ var imageEnCours = null; // base64 ou null (pas de changement) ou '' (suppressio
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (sessionStorage.getItem(SESSION_CLE) === 'true') {
-        afficherDashboard();
-    } else {
-        afficherLogin();
-    }
-
     initialiserLogin();
     initialiserNavigation();
     initialiserBoutons();
     initialiserApparence();
+    initialiserExportImport();
+
+    // Reagit a l'etat d'authentification Firebase :
+    // - connecte -> on synchronise depuis le cloud puis on affiche le dashboard
+    // - deconnecte -> on affiche le login
+    if (window.FirebaseSync && FirebaseSync.disponible) {
+        FirebaseSync.surChangementAuth(function(user) {
+            if (user) {
+                FirebaseSync.chargerCloud()
+                    .catch(function(err) {
+                        console.warn('Sync cloud impossible :', err);
+                    })
+                    .then(afficherDashboard);
+            } else {
+                afficherLogin();
+            }
+        });
+    } else {
+        // Mode degrade : Firebase indisponible, on reste en localStorage
+        afficherLogin();
+    }
 });
 
 // ============================================
@@ -54,26 +69,23 @@ function initialiserLogin() {
         var btn    = form.querySelector('.btn-login');
         btn.disabled = true;
 
-        hashSHA256(saisie).then(function(hash) {
+        if (!window.FirebaseSync || !FirebaseSync.disponible) {
             btn.disabled = false;
-            if (hash === MOT_DE_PASSE_HASH) {
-                sessionStorage.setItem(SESSION_CLE, 'true');
+            document.getElementById('groupe-motdepasse').classList.add('champ-erreur');
+            return;
+        }
+
+        FirebaseSync.connecter(EMAIL_ADMIN, saisie)
+            .then(function() {
+                btn.disabled = false;
                 document.getElementById('groupe-motdepasse').classList.remove('champ-erreur');
-                afficherDashboard();
-            } else {
+                // L'affichage du dashboard est declenche par surChangementAuth
+            })
+            .catch(function() {
+                btn.disabled = false;
                 document.getElementById('groupe-motdepasse').classList.add('champ-erreur');
                 document.getElementById('motdepasse').value = '';
-            }
-        });
-    });
-}
-
-function hashSHA256(texte) {
-    var data = new TextEncoder().encode(texte);
-    return crypto.subtle.digest('SHA-256', data).then(function(buffer) {
-        return Array.from(new Uint8Array(buffer))
-            .map(function(b) { return b.toString(16).padStart(2, '0'); })
-            .join('');
+            });
     });
 }
 
@@ -100,8 +112,12 @@ function initialiserNavigation() {
     });
 
     document.getElementById('btn-deconnexion').addEventListener('click', function() {
-        sessionStorage.removeItem(SESSION_CLE);
-        afficherLogin();
+        if (window.FirebaseSync && FirebaseSync.disponible) {
+            FirebaseSync.deconnecter();
+            // surChangementAuth se chargera d'afficher le login
+        } else {
+            afficherLogin();
+        }
     });
 }
 
@@ -242,6 +258,8 @@ function sauvegarder() {
 
     var produits = lireProduits();
 
+    var idImageAffectee = null;
+
     if (idEnEdition === null) {
         produits.push({
             id:          prochainId,
@@ -252,9 +270,9 @@ function sauvegarder() {
             image:       categorie + '-' + prochainId + '.jpg',
             stock:       stock
         });
-        // Sauvegarder l'image si fournie
         if (imageEnCours) {
             localStorage.setItem('img_' + prochainId, imageEnCours);
+            idImageAffectee = prochainId;
         }
     } else {
         for (var i = 0; i < produits.length; i++) {
@@ -267,15 +285,19 @@ function sauvegarder() {
                 break;
             }
         }
-        // Mettre a jour l'image
         if (imageEnCours === '') {
             localStorage.removeItem('img_' + idEnEdition);
+            idImageAffectee = idEnEdition;
         } else if (imageEnCours) {
             localStorage.setItem('img_' + idEnEdition, imageEnCours);
+            idImageAffectee = idEnEdition;
         }
     }
 
     sauvegarderProduits(produits);
+    if (idImageAffectee !== null) {
+        synchroniserImageCloud(idImageAffectee, imageEnCours);
+    }
     fermerFormulaire();
     chargerTableau();
 }
@@ -285,7 +307,17 @@ function supprimerProduit(id) {
     localStorage.removeItem('img_' + id);
     var produits = lireProduits().filter(function(p) { return p.id !== id; });
     sauvegarderProduits(produits);
+    synchroniserImageCloud(id, ''); // suppression dans Firestore
     chargerTableau();
+}
+
+// Repercute la modification d'image dans Firestore (echec silencieux : localStorage reste source de verite locale)
+function synchroniserImageCloud(produitId, base64) {
+    if (!window.FirebaseSync || !FirebaseSync.disponible) return;
+    var promesse = (typeof base64 === 'string' && base64.indexOf('data:image/') === 0)
+        ? FirebaseSync.sauvegarderImageCloud(produitId, base64)
+        : FirebaseSync.supprimerImageCloud(produitId);
+    promesse.catch(function(err) { console.warn('Sync image cloud echouee :', err); });
 }
 
 // ============================================
@@ -421,6 +453,7 @@ function initialiserApparence() {
         else         localStorage.removeItem('site_annonce');
 
         localStorage.setItem(THEME_CLE, JSON.stringify(theme));
+        synchroniserConfigCloud();
 
         var conf = document.getElementById('apparence-confirmation');
         conf.style.display = 'block';
@@ -433,6 +466,7 @@ function initialiserApparence() {
         localStorage.removeItem('site_nom');
         localStorage.removeItem('site_sous_nom');
         localStorage.removeItem('site_annonce');
+        synchroniserConfigCloud();
         location.reload();
     });
 }
@@ -488,4 +522,239 @@ function lireProduits() {
 
 function sauvegarderProduits(produits) {
     localStorage.setItem(PRODUITS_CLE, JSON.stringify(produits));
+    synchroniserConfigCloud();
+}
+
+// Pousse produits + theme + textes dans Firestore (echec silencieux, localStorage reste a jour)
+function synchroniserConfigCloud() {
+    if (!window.FirebaseSync || !FirebaseSync.disponible) return;
+    var theme = lireThemeBrut();
+    var payload = {
+        produits: lireProduits(),
+        theme:    theme,
+        textes:   {
+            nom:     localStorage.getItem('site_nom')      || '',
+            sousNom: localStorage.getItem('site_sous_nom') || '',
+            annonce: localStorage.getItem('site_annonce')  || ''
+        }
+    };
+    FirebaseSync.sauvegarderCloud(payload).catch(function(err) {
+        console.warn('Sync config cloud echouee :', err);
+    });
+}
+
+// ============================================
+// EXPORT / IMPORT DE LA CONFIGURATION
+// Permet a l'admin de sauvegarder son travail dans un fichier
+// et de le restaurer plus tard ou sur un autre navigateur.
+// ============================================
+
+var POLICES_AUTORISEES_EXPORT = [
+    'Georgia, serif',
+    "'Palatino Linotype', Palatino, serif",
+    "Garamond, 'EB Garamond', serif",
+    "'Book Antiqua', Palatino, serif",
+    "'Times New Roman', Times, serif"
+];
+
+function initialiserExportImport() {
+    var btnExporter = document.getElementById('btn-exporter-config');
+    var btnImporter = document.getElementById('btn-importer-config');
+    var inputFichier = document.getElementById('champ-import-config');
+
+    if (!btnExporter || !btnImporter || !inputFichier) return;
+
+    btnExporter.addEventListener('click', exporterConfig);
+
+    btnImporter.addEventListener('click', function() {
+        inputFichier.click();
+    });
+
+    inputFichier.addEventListener('change', function() {
+        var fichier = inputFichier.files[0];
+        if (fichier) importerConfig(fichier);
+        inputFichier.value = '';
+    });
+}
+
+function exporterConfig() {
+    var config = {
+        version:    1,
+        exporteLe:  new Date().toISOString(),
+        produits:   lireProduits(),
+        theme:      lireThemeBrut(),
+        textes:     {
+            nom:      localStorage.getItem('site_nom')      || '',
+            sousNom:  localStorage.getItem('site_sous_nom') || '',
+            annonce:  localStorage.getItem('site_annonce') || ''
+        },
+        images:     collecterImages()
+    };
+
+    var blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    var date = new Date().toISOString().slice(0, 10);
+    a.href     = url;
+    a.download = 'atelier-du-detail-config-' + date + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    afficherMessageSauvegarde('Configuration exportee. Conservez bien ce fichier.', 'succes');
+}
+
+function lireThemeBrut() {
+    var donnees = localStorage.getItem(THEME_CLE);
+    if (!donnees) return {};
+    try { return JSON.parse(donnees) || {}; }
+    catch (e) { return {}; }
+}
+
+function collecterImages() {
+    var images = {};
+    for (var i = 0; i < localStorage.length; i++) {
+        var cle = localStorage.key(i);
+        if (cle && cle.indexOf('img_') === 0) {
+            var val = localStorage.getItem(cle);
+            if (estImageBase64Valide(val)) {
+                images[cle.substring(4)] = val;
+            }
+        }
+    }
+    return images;
+}
+
+function importerConfig(fichier) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var config;
+        try {
+            config = JSON.parse(e.target.result);
+        } catch (err) {
+            afficherMessageSauvegarde('Fichier invalide : ce n\'est pas un JSON lisible.', 'erreur');
+            return;
+        }
+
+        if (!config || typeof config !== 'object' || config.version !== 1) {
+            afficherMessageSauvegarde('Fichier invalide : structure inattendue ou version non supportee.', 'erreur');
+            return;
+        }
+
+        if (!confirm('Importer cette configuration va remplacer tous vos produits, photos, couleurs et textes actuels. Continuer ?')) {
+            return;
+        }
+
+        try {
+            appliquerImport(config);
+        } catch (err) {
+            afficherMessageSauvegarde('Erreur a l\'import : ' + err.message, 'erreur');
+            return;
+        }
+
+        afficherMessageSauvegarde('Configuration importee. La page va se recharger.', 'succes');
+        setTimeout(function() { location.reload(); }, 1200);
+    };
+    reader.onerror = function() {
+        afficherMessageSauvegarde('Impossible de lire le fichier.', 'erreur');
+    };
+    reader.readAsText(fichier);
+}
+
+function appliquerImport(config) {
+    // 1) Produits
+    if (Array.isArray(config.produits)) {
+        var produitsValides = config.produits.filter(estProduitValide);
+        localStorage.setItem(PRODUITS_CLE, JSON.stringify(produitsValides));
+    }
+
+    // 2) Theme
+    if (config.theme && typeof config.theme === 'object') {
+        var themeNettoye = nettoyerTheme(config.theme);
+        if (Object.keys(themeNettoye).length > 0) {
+            localStorage.setItem(THEME_CLE, JSON.stringify(themeNettoye));
+        } else {
+            localStorage.removeItem(THEME_CLE);
+        }
+    }
+
+    // 3) Textes
+    if (config.textes && typeof config.textes === 'object') {
+        ecrireTexte('site_nom',      config.textes.nom);
+        ecrireTexte('site_sous_nom', config.textes.sousNom);
+        ecrireTexte('site_annonce',  config.textes.annonce);
+    }
+
+    // 4) Images : on remet a zero les images existantes pour eviter le melange
+    purgerImages();
+    var imagesAUploader = [];
+    if (config.images && typeof config.images === 'object') {
+        Object.keys(config.images).forEach(function(id) {
+            var val = config.images[id];
+            if (/^\d+$/.test(id) && estImageBase64Valide(val)) {
+                localStorage.setItem('img_' + id, val);
+                imagesAUploader.push({ id: id, data: val });
+            }
+        });
+    }
+
+    // 5) Repercussion dans Firestore (best-effort)
+    synchroniserConfigCloud();
+    if (window.FirebaseSync && FirebaseSync.disponible) {
+        imagesAUploader.forEach(function(img) {
+            FirebaseSync.sauvegarderImageCloud(img.id, img.data)
+                .catch(function(err) { console.warn('Sync image cloud echouee :', err); });
+        });
+    }
+}
+
+function estProduitValide(p) {
+    return p && typeof p === 'object'
+        && typeof p.id === 'number' && p.id >= 0
+        && typeof p.nom === 'string' && p.nom.length > 0
+        && typeof p.categorie === 'string'
+        && typeof p.prix === 'number' && p.prix >= 0
+        && typeof p.stock === 'number' && p.stock >= 0
+        && typeof p.description === 'string';
+}
+
+function nettoyerTheme(theme) {
+    var couleurs = ['--rose-fonce', '--or', '--blanc-casse', '--texte-fonce', '--rose-poudre', '--rose-moyen'];
+    var nettoye = {};
+    couleurs.forEach(function(v) {
+        if (typeof theme[v] === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(theme[v])) {
+            nettoye[v] = theme[v];
+        }
+    });
+    if (typeof theme['--police'] === 'string' && POLICES_AUTORISEES_EXPORT.indexOf(theme['--police']) !== -1) {
+        nettoye['--police'] = theme['--police'];
+    }
+    return nettoye;
+}
+
+function ecrireTexte(cle, valeur) {
+    if (typeof valeur === 'string' && valeur.trim() !== '') {
+        localStorage.setItem(cle, valeur.trim());
+    } else {
+        localStorage.removeItem(cle);
+    }
+}
+
+function purgerImages() {
+    var aSupprimer = [];
+    for (var i = 0; i < localStorage.length; i++) {
+        var cle = localStorage.key(i);
+        if (cle && cle.indexOf('img_') === 0) aSupprimer.push(cle);
+    }
+    aSupprimer.forEach(function(cle) { localStorage.removeItem(cle); });
+}
+
+function afficherMessageSauvegarde(texte, type) {
+    var zone = document.getElementById('sauvegarde-message');
+    if (!zone) return;
+    zone.textContent = texte;
+    zone.className = 'sauvegarde-message sauvegarde-message--' + type;
+    zone.style.display = 'block';
+    setTimeout(function() { zone.style.display = 'none'; }, 5000);
 }
