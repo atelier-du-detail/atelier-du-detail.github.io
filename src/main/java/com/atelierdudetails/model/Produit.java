@@ -4,7 +4,7 @@ public class Produit {
 
     private Long id;
     private String nom;
-    private String categorie;   // "bracelet", "collier", "foulard"
+    private String categorie;   // "bracelet", "foulard"
     private double prix;
     private String description;
     private String image;

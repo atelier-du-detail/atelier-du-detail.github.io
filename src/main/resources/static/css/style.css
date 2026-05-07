@@ -347,7 +347,6 @@ a {
 }
 
 .categorie-bracelet { background: linear-gradient(160deg, #f5e6e8 0%, #dfa8b2 100%); }
-.categorie-collier  { background: linear-gradient(160deg, #e6d0b0 0%, #b8895a 100%); }
 .categorie-foulard  { background: linear-gradient(160deg, #d6e8d4 0%, #8ab48c 100%); }
 
 .categorie-carte h3 {
@@ -490,34 +489,6 @@ a {
     border-radius: 50%;
     top: calc(50% - 62px);
     left: calc(50% - 10px);
-}
-
-/* --- COLLIER : pendentif sur chaine --- */
-.carte-produit-image--collier {
-    background: linear-gradient(160deg, #e6d0b0 0%, #b8895a 100%);
-}
-.carte-produit-image--collier::before {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 70px;
-    background: rgba(255,255,255,0.55);
-    top: 18%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.carte-produit-image--collier::after {
-    content: '';
-    position: absolute;
-    width: 52px;
-    height: 52px;
-    border: 3px solid rgba(255,255,255,0.65);
-    border-radius: 50%;
-    top: calc(18% + 70px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.15);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 /* --- FOULARD : vagues diagonales --- */
@@ -1160,7 +1131,6 @@ a {
 }
 
 .panier-image--bracelet { background: linear-gradient(135deg, #f5e6e8, #dfa8b2); }
-.panier-image--collier  { background: linear-gradient(135deg, #e6d0b0, #b8895a); }
 .panier-image--foulard  { background: linear-gradient(135deg, #d6e8d4, #8ab48c); }
 
 .panier-article-info {
@@ -2029,34 +1999,6 @@ a {
     transform: translate(-50%, -50%);
 }
 
-.produit-image-grande--collier {
-    background: linear-gradient(145deg, #e6d0b0 0%, #b8895a 100%);
-}
-
-.produit-image-grande--collier::before {
-    content: '';
-    position: absolute;
-    width: 2px;
-    height: 120px;
-    background: rgba(255,255,255,0.6);
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.produit-image-grande--collier::after {
-    content: '';
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 4px solid rgba(255,255,255,0.65);
-    border-radius: 50%;
-    background: rgba(255,255,255,0.12);
-    top: calc(15% + 120px);
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .produit-image-grande--foulard {
     background: linear-gradient(145deg, #d6e8d4 0%, #8ab48c 100%);
 }
@@ -2673,7 +2615,6 @@ a {
 }
 
 .recap-image--bracelet { background: #f5e6e8; }
-.recap-image--collier  { background: #e8f0e8; }
 .recap-image--foulard  { background: #f0ebe0; }
 
 .recap-article-info {

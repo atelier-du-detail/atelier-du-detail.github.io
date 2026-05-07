@@ -87,7 +87,6 @@ function construireFooter() {
         '            <h4>Collections</h4>',
         '            <ul>',
         '                <li><a href="catalogue.html?categorie=bracelet">Bracelets</a></li>',
-        '                <li><a href="catalogue.html?categorie=collier">Colliers</a></li>',
         '                <li><a href="catalogue.html?categorie=foulard">Foulards</a></li>',
         '            </ul>',
         '        </div>',
