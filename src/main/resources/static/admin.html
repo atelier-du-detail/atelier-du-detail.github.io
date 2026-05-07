@@ -232,6 +232,40 @@
                         </div>
                     </div>
 
+                    <!-- Images des collections (cartes page d'accueil) -->
+                    <div class="apparence-carte">
+                        <h3 class="apparence-titre">Images des collections</h3>
+                        <p class="apparence-aide">Photos affichees comme fond des cartes Bracelets et Foulards sur la page d'accueil. Si aucune photo, le fond colore par defaut est conserve.</p>
+
+                        <div class="champ-groupe champ-groupe--pleine-largeur">
+                            <label>Image — Bracelets</label>
+                            <div class="image-upload-zone" id="image-bracelet-zone">
+                                <input type="file" id="champ-image-bracelet" accept="image/*" class="image-input">
+                                <div class="image-upload-label" id="image-bracelet-label">
+                                    Cliquer pour choisir une photo (JPG, PNG)
+                                </div>
+                                <img id="image-bracelet-preview" class="image-preview" alt="Apercu" style="display:none">
+                            </div>
+                            <button type="button" class="btn-supprimer-image" id="btn-supprimer-image-bracelet" style="display:none">
+                                Supprimer l'image
+                            </button>
+                        </div>
+
+                        <div class="champ-groupe champ-groupe--pleine-largeur">
+                            <label>Image — Foulards</label>
+                            <div class="image-upload-zone" id="image-foulard-zone">
+                                <input type="file" id="champ-image-foulard" accept="image/*" class="image-input">
+                                <div class="image-upload-label" id="image-foulard-label">
+                                    Cliquer pour choisir une photo (JPG, PNG)
+                                </div>
+                                <img id="image-foulard-preview" class="image-preview" alt="Apercu" style="display:none">
+                            </div>
+                            <button type="button" class="btn-supprimer-image" id="btn-supprimer-image-foulard" style="display:none">
+                                Supprimer l'image
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Actions -->

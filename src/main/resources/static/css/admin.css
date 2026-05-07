@@ -500,6 +500,13 @@
     border-bottom: 1px solid #f0ebe8;
 }
 
+.apparence-aide {
+    font-size: 0.85rem;
+    color: #7a6a6a;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+}
+
 .couleur-liste {
     display: flex;
     flex-direction: column;

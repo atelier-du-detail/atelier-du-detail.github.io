@@ -346,8 +346,16 @@ a {
     height: 230px;
 }
 
-.categorie-bracelet { background: linear-gradient(160deg, #f5e6e8 0%, #dfa8b2 100%); }
-.categorie-foulard  { background: linear-gradient(160deg, #d6e8d4 0%, #8ab48c 100%); }
+.categorie-bracelet {
+    background: var(--bg-categorie-bracelet, linear-gradient(160deg, #f5e6e8 0%, #dfa8b2 100%));
+    background-size: cover;
+    background-position: center;
+}
+.categorie-foulard  {
+    background: var(--bg-categorie-foulard, linear-gradient(160deg, #d6e8d4 0%, #8ab48c 100%));
+    background-size: cover;
+    background-position: center;
+}
 
 .categorie-carte h3 {
     font-size: 1.3rem;

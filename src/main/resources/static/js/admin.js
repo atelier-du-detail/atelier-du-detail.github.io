@@ -14,6 +14,10 @@ var prochainId   = 1;
 var idEnEdition  = null;
 var imageEnCours = null; // base64 ou null (pas de changement) ou '' (suppression)
 
+// Images de fond des cartes categories (page d'accueil) en attente de sauvegarde.
+// null = pas de changement depuis l'ouverture, '' = a supprimer, base64 = nouvelle image.
+var imagesCategoriesEnCours = { bracelet: null, foulard: null };
+
 // ============================================
 // DEMARRAGE
 // ============================================
@@ -410,6 +414,7 @@ function reinitialiserPreviewImage() {
 
 function initialiserApparence() {
     chargerThemeExistant();
+    initialiserUploadsCategories();
 
     // Color pickers — mise a jour en direct
     var pickers = [
@@ -452,6 +457,22 @@ function initialiserApparence() {
         else         localStorage.removeItem('site_annonce');
 
         localStorage.setItem(THEME_CLE, JSON.stringify(theme));
+
+        // Persiste les images de fond des cartes categories qui ont change
+        ['bracelet', 'foulard'].forEach(function(cat) {
+            var enCours = imagesCategoriesEnCours[cat];
+            if (enCours === null) return; // pas de changement
+            var cleLocale = 'img_categorie_' + cat;
+            var idDoc     = 'categorie_' + cat;
+            if (enCours === '') {
+                localStorage.removeItem(cleLocale);
+            } else {
+                localStorage.setItem(cleLocale, enCours);
+            }
+            synchroniserImageCloud(idDoc, enCours);
+            imagesCategoriesEnCours[cat] = null;
+        });
+
         synchroniserConfigCloud();
 
         var conf = document.getElementById('apparence-confirmation');
@@ -460,14 +481,86 @@ function initialiserApparence() {
     });
 
     document.getElementById('btn-reinitialiser-theme').addEventListener('click', function() {
-        if (!confirm('Reinitialiser toutes les couleurs et polices par defaut ?')) return;
+        if (!confirm('Reinitialiser toutes les couleurs, polices et images de collection par defaut ?')) return;
         localStorage.removeItem(THEME_CLE);
         localStorage.removeItem('site_nom');
         localStorage.removeItem('site_sous_nom');
         localStorage.removeItem('site_annonce');
+        ['bracelet', 'foulard'].forEach(function(cat) {
+            localStorage.removeItem('img_categorie_' + cat);
+            synchroniserImageCloud('categorie_' + cat, '');
+        });
         synchroniserConfigCloud();
         location.reload();
     });
+}
+
+// ============================================
+// UPLOAD IMAGES DE CATEGORIES (cartes home)
+// ============================================
+
+function initialiserUploadsCategories() {
+    ['bracelet', 'foulard'].forEach(function(cat) {
+        var zone    = document.getElementById('image-' + cat + '-zone');
+        var input   = document.getElementById('champ-image-' + cat);
+        var btnSup  = document.getElementById('btn-supprimer-image-' + cat);
+        if (!zone || !input || !btnSup) return;
+
+        // Affiche la preview existante (depuis localStorage) si une image est deja en place
+        var imgExistante = localStorage.getItem('img_categorie_' + cat);
+        if (estImageBase64Valide(imgExistante)) {
+            afficherPreviewCategorie(cat, imgExistante);
+        }
+
+        zone.addEventListener('click', function() { input.click(); });
+
+        input.addEventListener('change', function() {
+            var fichier = input.files[0];
+            if (!fichier) return;
+            compresserImage(fichier, function(base64) {
+                imagesCategoriesEnCours[cat] = base64;
+                afficherPreviewCategorie(cat, base64);
+            });
+        });
+
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            zone.classList.add('drag-actif');
+        });
+        zone.addEventListener('dragleave', function() {
+            zone.classList.remove('drag-actif');
+        });
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            zone.classList.remove('drag-actif');
+            var fichier = e.dataTransfer.files[0];
+            if (!fichier || fichier.type.indexOf('image/') !== 0) return;
+            compresserImage(fichier, function(base64) {
+                imagesCategoriesEnCours[cat] = base64;
+                afficherPreviewCategorie(cat, base64);
+            });
+        });
+
+        btnSup.addEventListener('click', function() {
+            imagesCategoriesEnCours[cat] = '';
+            reinitialiserPreviewCategorie(cat);
+        });
+    });
+}
+
+function afficherPreviewCategorie(cat, src) {
+    document.getElementById('image-' + cat + '-preview').src           = src;
+    document.getElementById('image-' + cat + '-preview').style.display = 'block';
+    document.getElementById('image-' + cat + '-label').style.display   = 'none';
+    document.getElementById('btn-supprimer-image-' + cat).style.display = 'inline-block';
+}
+
+function reinitialiserPreviewCategorie(cat) {
+    document.getElementById('image-' + cat + '-preview').src           = '';
+    document.getElementById('image-' + cat + '-preview').style.display = 'none';
+    document.getElementById('image-' + cat + '-label').style.display   = 'block';
+    document.getElementById('btn-supprimer-image-' + cat).style.display = 'none';
+    document.getElementById('champ-image-' + cat).value                  = '';
 }
 
 function chargerThemeExistant() {
