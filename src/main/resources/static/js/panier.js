@@ -4,7 +4,9 @@
 // Chargé sur toutes les pages.
 //
 // Structure stockée :
-// clé "panier" → [{ id, nom, prix, categorie, quantite }, ...]
+// clé "panier" → [{ id, nom, prix, categorie, quantite, variante? }, ...]
+//   variante (optionnel) : { nom, couleur }
+// Deux items du panier sont distincts si (id, variante.nom) different.
 // ============================================
 
 var PANIER_CLE = 'panier';
@@ -26,12 +28,24 @@ function sauvegarderPanier(panier) {
     localStorage.setItem(PANIER_CLE, JSON.stringify(panier));
 }
 
-// Ajoute un produit ou incrémente sa quantité s'il est déjà présent
-function ajouterAuPanier(produit) {
+// Identifiant logique d'un item (couple id produit + nom de variante).
+// Item sans variante -> "<id>|".
+function clePanierItem(id, varianteNom) {
+    return String(id) + '|' + (varianteNom || '');
+}
+
+function cleItem(item) {
+    return clePanierItem(item.id, item.variante ? item.variante.nom : '');
+}
+
+// Ajoute un produit ou incrémente sa quantité si une ligne identique existe deja.
+// variante (optionnel) : { nom, couleur } - chaque variante d'un meme produit est une ligne distincte.
+function ajouterAuPanier(produit, variante) {
     var panier = getPanier();
+    var cleCible = clePanierItem(produit.id, variante ? variante.nom : '');
     var index = -1;
     for (var i = 0; i < panier.length; i++) {
-        if (panier[i].id === produit.id) {
+        if (cleItem(panier[i]) === cleCible) {
             index = i;
             break;
         }
@@ -39,33 +53,39 @@ function ajouterAuPanier(produit) {
     if (index !== -1) {
         panier[index].quantite += 1;
     } else {
-        panier.push({
+        var nouvel = {
             id:        produit.id,
             nom:       produit.nom,
             prix:      produit.prix,
             categorie: produit.categorie,
             quantite:  1
-        });
+        };
+        if (variante && variante.nom) {
+            nouvel.variante = { nom: variante.nom, couleur: variante.couleur || '#cccccc' };
+        }
+        panier.push(nouvel);
     }
     sauvegarderPanier(panier);
 }
 
-function supprimerDuPanier(idProduit) {
+function supprimerDuPanier(idProduit, varianteNom) {
+    var cleCible = clePanierItem(idProduit, varianteNom);
     var panier = getPanier().filter(function(item) {
-        return item.id !== idProduit;
+        return cleItem(item) !== cleCible;
     });
     sauvegarderPanier(panier);
 }
 
-// Si nouvelleQuantite <= 0, supprime le produit
-function changerQuantite(idProduit, nouvelleQuantite) {
+// Si nouvelleQuantite <= 0, supprime la ligne.
+function changerQuantite(idProduit, varianteNom, nouvelleQuantite) {
     if (nouvelleQuantite <= 0) {
-        supprimerDuPanier(idProduit);
+        supprimerDuPanier(idProduit, varianteNom);
         return;
     }
+    var cleCible = clePanierItem(idProduit, varianteNom);
     var panier = getPanier();
     for (var i = 0; i < panier.length; i++) {
-        if (panier[i].id === idProduit) {
+        if (cleItem(panier[i]) === cleCible) {
             panier[i].quantite = nouvelleQuantite;
             break;
         }

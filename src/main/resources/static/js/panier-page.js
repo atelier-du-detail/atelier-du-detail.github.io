@@ -76,22 +76,32 @@ function construirePanierVide() {
 }
 
 function construireArticle(article) {
+    var varianteNom = article.variante ? article.variante.nom : '';
+    var dataAttrs   = 'data-id="' + article.id + '" data-variante="' + echapperHtml(varianteNom) + '"';
+    var blocVariante = article.variante
+        ? '<span class="panier-article-variante">' +
+              '<span class="variante-pastille" style="background-color:' + echapperHtml(article.variante.couleur || '#ccc') + '"></span>' +
+              echapperHtml(article.variante.nom) +
+          '</span>'
+        : '';
+
     return [
-        '<div class="panier-article fade-in" data-id="' + article.id + '">',
+        '<div class="panier-article fade-in" ' + dataAttrs + '>',
         '    <div class="panier-article-image panier-image--' + article.categorie + '"></div>',
         '    <div class="panier-article-info">',
         '        <span class="panier-article-categorie">' + article.categorie + '</span>',
         '        <h3 class="panier-article-nom">' + article.nom + '</h3>',
+        '        ' + blocVariante,
         '        <span class="panier-article-prix-unit">' + article.prix.toFixed(2) + ' &#8364; / piece</span>',
         '    </div>',
         '    <div class="panier-article-droite">',
         '        <div class="panier-article-quantite">',
-        '            <button class="btn-quantite btn-moins" data-id="' + article.id + '">&#8722;</button>',
+        '            <button class="btn-quantite btn-moins" ' + dataAttrs + '>&#8722;</button>',
         '            <span class="valeur-quantite">' + article.quantite + '</span>',
-        '            <button class="btn-quantite btn-plus" data-id="' + article.id + '">&#43;</button>',
+        '            <button class="btn-quantite btn-plus" ' + dataAttrs + '>&#43;</button>',
         '        </div>',
         '        <div class="panier-article-total">' + (article.prix * article.quantite).toFixed(2) + ' &#8364;</div>',
-        '        <button class="btn-supprimer" data-id="' + article.id + '" title="Retirer">Retirer</button>',
+        '        <button class="btn-supprimer" ' + dataAttrs + ' title="Retirer">Retirer</button>',
         '    </div>',
         '</div>'
     ].join('');
@@ -188,26 +198,29 @@ function construireRecap() {
 function ecouterBoutons() {
     document.querySelectorAll('.btn-moins').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            var id      = parseInt(btn.getAttribute('data-id'));
-            var article = trouverArticle(id);
-            if (article) changerQuantite(id, article.quantite - 1);
+            var id          = parseInt(btn.getAttribute('data-id'));
+            var varianteNom = btn.getAttribute('data-variante') || '';
+            var article     = trouverArticle(id, varianteNom);
+            if (article) changerQuantite(id, varianteNom, article.quantite - 1);
             afficherPanier();
         });
     });
 
     document.querySelectorAll('.btn-plus').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            var id      = parseInt(btn.getAttribute('data-id'));
-            var article = trouverArticle(id);
-            if (article) changerQuantite(id, article.quantite + 1);
+            var id          = parseInt(btn.getAttribute('data-id'));
+            var varianteNom = btn.getAttribute('data-variante') || '';
+            var article     = trouverArticle(id, varianteNom);
+            if (article) changerQuantite(id, varianteNom, article.quantite + 1);
             afficherPanier();
         });
     });
 
     document.querySelectorAll('.btn-supprimer').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            var id = parseInt(btn.getAttribute('data-id'));
-            supprimerDuPanier(id);
+            var id          = parseInt(btn.getAttribute('data-id'));
+            var varianteNom = btn.getAttribute('data-variante') || '';
+            supprimerDuPanier(id, varianteNom);
             afficherPanier();
         });
     });
@@ -241,10 +254,12 @@ function ecouterBoutons() {
 // UTILITAIRES
 // ============================================
 
-function trouverArticle(id) {
+function trouverArticle(id, varianteNom) {
     var panier = getPanier();
+    var cible  = String(id) + '|' + (varianteNom || '');
     for (var i = 0; i < panier.length; i++) {
-        if (panier[i].id === id) return panier[i];
+        var cle = String(panier[i].id) + '|' + (panier[i].variante ? panier[i].variante.nom : '');
+        if (cle === cible) return panier[i];
     }
     return null;
 }

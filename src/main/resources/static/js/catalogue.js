@@ -81,16 +81,32 @@ function creerCarteProduit(produit) {
     var article = document.createElement('article');
     article.className = 'carte-produit';
 
-    var stockFaible = produit.stock > 0 && produit.stock <= 3;
-    var rupture     = produit.stock === 0;
+    var aDesVariantes = Array.isArray(produit.variantes) && produit.variantes.length > 0;
+    var stockEffectif = aDesVariantes
+        ? produit.variantes.reduce(function(s, v) { return s + (v.stock || 0); }, 0)
+        : produit.stock;
+
+    var stockFaible = stockEffectif > 0 && stockEffectif <= 3;
+    var rupture     = stockEffectif === 0;
     var favori      = (typeof estFavori === 'function') ? estFavori(produit.id) : false;
 
     var badgeStock = stockFaible
-        ? '<span class="badge-stock-faible">Plus que ' + produit.stock + ' en stock</span>'
+        ? '<span class="badge-stock-faible">Plus que ' + stockEffectif + ' en stock</span>'
         : '';
 
     var btnDisabled = rupture ? ' disabled' : '';
-    var btnTexte    = rupture ? 'Epuise' : 'Ajouter';
+    var btnTexte    = rupture ? 'Epuise' : (aDesVariantes ? 'Choisir' : 'Ajouter');
+
+    var pastillesHtml = '';
+    if (aDesVariantes) {
+        pastillesHtml = '<div class="carte-produit-variantes">' +
+            produit.variantes.slice(0, 5).map(function(v) {
+                var rupVar = (v.stock || 0) === 0;
+                return '<span class="variante-pastille' + (rupVar ? ' variante-pastille--rupture' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '" title="' + echapperHtml(v.nom || '') + (rupVar ? ' (epuise)' : '') + '"></span>';
+            }).join('') +
+            (produit.variantes.length > 5 ? '<span class="variante-plus">+' + (produit.variantes.length - 5) + '</span>' : '') +
+        '</div>';
+    }
 
     article.innerHTML =
         '<a href="produit.html?id=' + produit.id + '" class="carte-produit-lien">' +
@@ -106,6 +122,7 @@ function creerCarteProduit(produit) {
                 '<h3 class="carte-produit-nom">' + echapperHtml(produit.nom) + '</h3>' +
             '</a>' +
             '<p class="carte-produit-description">' + echapperHtml(produit.description) + '</p>' +
+            pastillesHtml +
             '<div class="carte-produit-pied">' +
                 '<span class="carte-produit-prix">' + produit.prix.toFixed(2) + ' &#8364;</span>' +
                 '<button class="btn-ajouter"' + btnDisabled + ' data-id="' + produit.id + '">' +
@@ -137,14 +154,20 @@ function creerCarteProduit(produit) {
         cptMobile.forEach(function(el) { el.textContent = getFavorisCount(); });
     });
 
-    // Bouton ajouter au panier
+    // Bouton ajouter au panier — si variantes, redirige vers la fiche pour choisir
     if (!rupture) {
         var bouton = article.querySelector('.btn-ajouter');
-        bouton.addEventListener('click', function() {
-            ajouterAuPanier(produit);
-            mettreAJourCompteurPanier();
-            afficherNotif(produit.nom);
-        });
+        if (aDesVariantes) {
+            bouton.addEventListener('click', function() {
+                window.location.href = 'produit.html?id=' + produit.id;
+            });
+        } else {
+            bouton.addEventListener('click', function() {
+                ajouterAuPanier(produit);
+                mettreAJourCompteurPanier();
+                afficherNotif(produit.nom);
+            });
+        }
     }
 
     return article;

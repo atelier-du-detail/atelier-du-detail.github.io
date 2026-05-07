@@ -1,5 +1,7 @@
 package com.atelierdudetails.model;
 
+import java.util.List;
+
 public class Produit {
 
     private Long id;
@@ -9,6 +11,7 @@ public class Produit {
     private String description;
     private String image;
     private int stock;
+    private List<Variante> variantes; // null ou liste vide = pas de variantes (stock global utilise)
 
     // Constructeur vide obligatoire pour que Jackson puisse désérialiser le JSON
     public Produit() {}
@@ -43,6 +46,10 @@ public class Produit {
         return stock;
     }
 
+    public List<Variante> getVariantes() {
+        return variantes;
+    }
+
     // --- Setters ---
 
     public void setId(Long id) {
@@ -71,5 +78,9 @@ public class Produit {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public void setVariantes(List<Variante> variantes) {
+        this.variantes = variantes;
     }
 }

@@ -2848,3 +2848,133 @@ a {
         padding: 2rem 1.25rem;
     }
 }
+
+/* ============================================
+   VARIANTES (pastilles couleur)
+   Reutilisable : catalogue, fiche produit, panier, recap commande.
+   ============================================ */
+
+.variante-pastille {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+    box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.6);
+    vertical-align: middle;
+}
+
+.variante-pastille--rupture {
+    opacity: 0.45;
+    position: relative;
+}
+
+.variante-pastille--rupture::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -1px;
+    right: -1px;
+    height: 1px;
+    background: #888;
+    transform: rotate(-25deg);
+}
+
+/* Carte catalogue : ligne de pastilles sous la description */
+.carte-produit-variantes {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0.5rem 0 0.2rem;
+    flex-wrap: wrap;
+}
+
+.carte-produit-variantes .variante-pastille {
+    width: 16px;
+    height: 16px;
+}
+
+.variante-plus {
+    font-size: 0.78rem;
+    color: #7a6a6a;
+    font-style: italic;
+}
+
+/* Fiche produit : selecteur de variante */
+.produit-variantes-bloc {
+    margin: 1.2rem 0 1rem;
+}
+
+.produit-variante-nom {
+    font-weight: 600;
+    color: var(--texte-fonce);
+    margin-left: 4px;
+}
+
+.produit-variantes-pastilles {
+    display: flex;
+    gap: 10px;
+    margin-top: 0.55rem;
+    flex-wrap: wrap;
+}
+
+.variante-pastille-grande {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+    padding: 0;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.7);
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.variante-pastille-grande:hover:not(:disabled) {
+    transform: scale(1.08);
+    border-color: rgba(0,0,0,0.2);
+}
+
+.variante-pastille-grande.actif {
+    border-color: var(--texte-fonce, #22101a);
+    box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.7),
+        0 0 0 2px var(--blanc-casse, #fdf8f5);
+    transform: scale(1.05);
+}
+
+.variante-pastille-grande:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    position: relative;
+}
+
+.variante-pastille-grande:disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #888;
+    transform: rotate(-25deg);
+}
+
+/* Panier : variante affichee sous le nom */
+.panier-article-variante {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #7a6a6a;
+    margin: 0.2rem 0;
+}
+
+/* Recap commande (caisse) : variante en petit sous le nom */
+.recap-article-variante {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: #7a6a6a;
+    margin-top: 2px;
+}

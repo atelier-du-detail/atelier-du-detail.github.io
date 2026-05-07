@@ -41,10 +41,17 @@ function afficherRecapCommande(articles) {
 
     var conteneurArticles = document.getElementById('recap-articles');
     conteneurArticles.innerHTML = articles.map(function(a) {
+        var blocVariante = a.variante
+            ? '<span class="recap-article-variante">' +
+                  '<span class="variante-pastille" style="background-color:' + echapperHtml(a.variante.couleur || '#ccc') + '"></span>' +
+                  echapperHtml(a.variante.nom) +
+              '</span>'
+            : '';
         return '<div class="recap-article">' +
             '<div class="recap-article-image recap-image--' + echapperHtml(a.categorie) + '"></div>' +
             '<div class="recap-article-info">' +
                 '<span class="recap-article-nom">' + echapperHtml(a.nom) + '</span>' +
+                blocVariante +
                 '<span class="recap-article-qte">x' + a.quantite + '</span>' +
             '</div>' +
             '<span class="recap-article-prix">' + (a.prix * a.quantite).toFixed(2) + ' &#8364;</span>' +

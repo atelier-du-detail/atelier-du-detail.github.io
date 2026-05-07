@@ -35,8 +35,9 @@ function afficherSucces(section) {
     var total    = sessionStorage.getItem('caisse_total') || '';
 
     var lignesArticles = articles.map(function(a) {
+        var detailVariante = a.variante ? ' (' + echapperHtml(a.variante.nom) + ')' : '';
         return '<div class="conf-article">' +
-            '<span class="conf-article-nom">' + echapperHtml(a.nom) + ' x' + a.quantite + '</span>' +
+            '<span class="conf-article-nom">' + echapperHtml(a.nom) + detailVariante + ' x' + a.quantite + '</span>' +
             '<span class="conf-article-prix">' + (a.prix * a.quantite).toFixed(2) + ' &#8364;</span>' +
         '</div>';
     }).join('');

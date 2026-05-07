@@ -507,6 +507,113 @@
     line-height: 1.5;
 }
 
+.champ-aide {
+    font-size: 0.82rem;
+    color: #7a6a6a;
+    margin: 0.3rem 0 0.8rem;
+    line-height: 1.4;
+}
+
+.variantes-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 0.8rem;
+}
+
+.variantes-vide {
+    font-size: 0.85rem;
+    color: #aaa;
+    font-style: italic;
+    margin: 0;
+    padding: 0.6rem;
+}
+
+.variante-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 0.7rem;
+    align-items: center;
+    padding: 0.55rem 0.7rem;
+    background-color: #fbf6f3;
+    border: 1px solid #ece4e0;
+    border-radius: 8px;
+}
+
+.variante-item input[type="text"],
+.variante-item input[type="number"] {
+    margin: 0;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+    border: 1px solid #d8d0ce;
+    border-radius: 6px;
+    background-color: #fff;
+    font-family: inherit;
+}
+
+.variante-item input[type="number"] {
+    width: 80px;
+    text-align: center;
+}
+
+.variante-item input[type="color"] {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-retirer-variante {
+    background: transparent;
+    border: 1px solid #d8d0ce;
+    border-radius: 6px;
+    color: #888;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-retirer-variante:hover {
+    border-color: var(--rose-fonce);
+    color: var(--rose-fonce);
+    background-color: rgba(155,61,82,0.05);
+}
+
+.btn-ajouter-variante {
+    background-color: transparent;
+    border: 1px dashed var(--or);
+    color: var(--or);
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.btn-ajouter-variante:hover {
+    background-color: rgba(184,137,90,0.06);
+}
+
+.tableau-variantes-mini {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.tableau-variante-pastille {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
 .couleur-liste {
     display: flex;
     flex-direction: column;

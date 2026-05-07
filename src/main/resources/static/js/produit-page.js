@@ -27,15 +27,44 @@ document.addEventListener('DOMContentLoaded', function() {
 // ============================================
 
 function afficherProduit(produit) {
-    var rupture    = produit.stock === 0;
-    var stockFaible = produit.stock > 0 && produit.stock <= 3;
+    var aDesVariantes = Array.isArray(produit.variantes) && produit.variantes.length > 0;
+
+    // Variante selectionnee initiale : la premiere en stock, sinon la premiere si toutes en rupture.
+    var varianteIndex = -1;
+    if (aDesVariantes) {
+        for (var k = 0; k < produit.variantes.length; k++) {
+            if ((produit.variantes[k].stock || 0) > 0) { varianteIndex = k; break; }
+        }
+        if (varianteIndex === -1) varianteIndex = 0;
+    }
+
+    var stockEffectif = aDesVariantes
+        ? (produit.variantes[varianteIndex].stock || 0)
+        : produit.stock;
+
+    var rupture     = stockEffectif === 0;
+    var stockFaible = stockEffectif > 0 && stockEffectif <= 3;
     var favori      = estFavori(produit.id);
 
     var badgeStock = '';
-    if (rupture)     badgeStock = '<span class="produit-badge-stock produit-badge-stock--rouge">Epuise</span>';
-    else if (stockFaible) badgeStock = '<span class="produit-badge-stock produit-badge-stock--orange">Plus que ' + produit.stock + ' en stock</span>';
-    else             badgeStock = '<span class="produit-badge-stock produit-badge-stock--vert">En stock</span>';
+    if (rupture)          badgeStock = '<span class="produit-badge-stock produit-badge-stock--rouge" id="badge-stock">Epuise</span>';
+    else if (stockFaible) badgeStock = '<span class="produit-badge-stock produit-badge-stock--orange" id="badge-stock">Plus que ' + stockEffectif + ' en stock</span>';
+    else                  badgeStock = '<span class="produit-badge-stock produit-badge-stock--vert" id="badge-stock">En stock</span>';
 
+    var blocVariantes = '';
+    if (aDesVariantes) {
+        blocVariantes = [
+            '<div class="produit-variantes-bloc">',
+            '    <label class="produit-label">Couleur : <span class="produit-variante-nom" id="variante-nom-affichee">' + echapperHtml(produit.variantes[varianteIndex].nom) + '</span></label>',
+            '    <div class="produit-variantes-pastilles" id="produit-variantes-pastilles">',
+            produit.variantes.map(function(v, i) {
+                var rup = (v.stock || 0) === 0;
+                return '<button type="button" class="variante-pastille-grande' + (i === varianteIndex ? ' actif' : '') + (rup ? ' variante-pastille--rupture' : '') + '" data-index="' + i + '" title="' + echapperHtml(v.nom) + (rup ? ' (epuise)' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '"' + (rup ? ' disabled' : '') + '></button>';
+            }).join(''),
+            '    </div>',
+            '</div>'
+        ].join('');
+    }
 
     var conteneur = document.getElementById('produit-contenu');
     conteneur.innerHTML = [
@@ -69,6 +98,8 @@ function afficherProduit(produit) {
 
         '        <p class="produit-description-detail">' + produit.description + '</p>',
 
+        '        ' + blocVariantes,
+
         '        <div class="produit-actions">',
         '            <div class="produit-quantite-wrapper">',
         '                <label class="produit-label">Quantite</label>',
@@ -95,7 +126,7 @@ function afficherProduit(produit) {
     ].join('');
 
     appliquerImageStockee(document.querySelector('.produit-image-grande'), produit.id);
-    initialiserActionsPage(produit, rupture);
+    initialiserActionsPage(produit, varianteIndex);
 
     setTimeout(function() {
         document.querySelectorAll('#produit-contenu .fade-in').forEach(function(el) {
@@ -104,34 +135,87 @@ function afficherProduit(produit) {
     }, 80);
 }
 
-function initialiserActionsPage(produit, rupture) {
+function initialiserActionsPage(produit, varianteIndexInitial) {
     var quantite = 1;
     var btnMoins = document.getElementById('btn-moins');
     var btnPlus  = document.getElementById('btn-plus');
     var valeurEl = document.getElementById('valeur-qte');
+    var btnPanier = document.getElementById('btn-panier');
+
+    var aDesVariantes = Array.isArray(produit.variantes) && produit.variantes.length > 0;
+    var varianteIndex = varianteIndexInitial;
+
+    function varianteActuelle() {
+        return aDesVariantes ? produit.variantes[varianteIndex] : null;
+    }
+
+    function stockActuel() {
+        var v = varianteActuelle();
+        return v ? (v.stock || 0) : produit.stock;
+    }
+
+    function rafraichirEtatBouton() {
+        var stock = stockActuel();
+        var rup   = stock === 0;
+        btnPanier.disabled = rup;
+        btnPanier.textContent = rup ? 'Produit epuise' : 'Ajouter au panier';
+
+        var badge = document.getElementById('badge-stock');
+        if (badge) {
+            badge.classList.remove('produit-badge-stock--rouge', 'produit-badge-stock--orange', 'produit-badge-stock--vert');
+            if (rup) {
+                badge.classList.add('produit-badge-stock--rouge');
+                badge.textContent = 'Epuise';
+            } else if (stock <= 3) {
+                badge.classList.add('produit-badge-stock--orange');
+                badge.textContent = 'Plus que ' + stock + ' en stock';
+            } else {
+                badge.classList.add('produit-badge-stock--vert');
+                badge.textContent = 'En stock';
+            }
+        }
+        if (quantite > stock && stock > 0) {
+            quantite = stock;
+            valeurEl.textContent = quantite;
+        }
+    }
 
     btnMoins.addEventListener('click', function() {
         if (quantite > 1) { quantite--; valeurEl.textContent = quantite; }
     });
 
     btnPlus.addEventListener('click', function() {
-        if (quantite < 10) { quantite++; valeurEl.textContent = quantite; }
+        var max = Math.min(10, stockActuel() || 10);
+        if (quantite < max) { quantite++; valeurEl.textContent = quantite; }
     });
 
-    if (!rupture) {
-        var btnPanier = document.getElementById('btn-panier');
-        btnPanier.addEventListener('click', function() {
-            for (var i = 0; i < quantite; i++) { ajouterAuPanier(produit); }
+    btnPanier.addEventListener('click', function() {
+        if (btnPanier.disabled) return;
+        var v = varianteActuelle();
+        for (var i = 0; i < quantite; i++) { ajouterAuPanier(produit, v); }
 
-            var compteur = document.getElementById('panier-compteur');
-            if (compteur) compteur.textContent = getPanierCount();
+        var compteur = document.getElementById('panier-compteur');
+        if (compteur) compteur.textContent = getPanierCount();
 
-            btnPanier.textContent = 'Ajoute !';
-            btnPanier.style.backgroundColor = 'var(--or)';
-            setTimeout(function() {
-                btnPanier.textContent = 'Ajouter au panier';
-                btnPanier.style.backgroundColor = '';
-            }, 2000);
+        btnPanier.textContent = 'Ajoute !';
+        btnPanier.style.backgroundColor = 'var(--or)';
+        setTimeout(function() {
+            btnPanier.textContent = 'Ajouter au panier';
+            btnPanier.style.backgroundColor = '';
+        }, 2000);
+    });
+
+    if (aDesVariantes) {
+        document.querySelectorAll('#produit-variantes-pastilles .variante-pastille-grande').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                if (btn.disabled) return;
+                varianteIndex = parseInt(btn.getAttribute('data-index'));
+                document.querySelectorAll('#produit-variantes-pastilles .variante-pastille-grande').forEach(function(b) {
+                    b.classList.toggle('actif', b === btn);
+                });
+                document.getElementById('variante-nom-affichee').textContent = produit.variantes[varianteIndex].nom;
+                rafraichirEtatBouton();
+            });
         });
     }
 

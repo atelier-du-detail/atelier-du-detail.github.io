@@ -18,6 +18,10 @@ var imageEnCours = null; // base64 ou null (pas de changement) ou '' (suppressio
 // null = pas de changement depuis l'ouverture, '' = a supprimer, base64 = nouvelle image.
 var imagesCategoriesEnCours = { bracelet: null, foulard: null };
 
+// Variantes en cours de saisie dans le formulaire produit.
+// Chaque entree : { nom, couleur, stock }. Vide = produit sans variantes.
+var variantesEnCours = [];
+
 // ============================================
 // DEMARRAGE
 // ============================================
@@ -148,6 +152,15 @@ function chargerTableau() {
                 ? '<span class="badge badge--orange">' + p.stock + '</span>'
                 : '<span class="badge badge--vert">' + p.stock + '</span>';
 
+        var miniVariantes = '';
+        if (Array.isArray(p.variantes) && p.variantes.length > 0) {
+            miniVariantes = '<span class="tableau-variantes-mini" title="' + p.variantes.length + ' variante(s)">' +
+                p.variantes.slice(0, 4).map(function(v) {
+                    return '<span class="tableau-variante-pastille" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '"></span>';
+                }).join('') +
+            '</span>';
+        }
+
         var imgStockee = localStorage.getItem('img_' + p.id);
         var cellImg = (imgStockee && estImageBase64Valide(imgStockee))
             ? '<td><img src="' + imgStockee + '" class="tableau-thumbnail" alt=""></td>'
@@ -160,7 +173,7 @@ function chargerTableau() {
             '    <td>' + echapperHtml(p.nom) + '</td>',
             '    <td><span class="badge-categorie badge-categorie--' + echapperHtml(p.categorie) + '">' + echapperHtml(p.categorie) + '</span></td>',
             '    <td>' + p.prix.toFixed(2) + ' &#8364;</td>',
-            '    <td>' + badgeStock + '</td>',
+            '    <td>' + badgeStock + miniVariantes + '</td>',
             '    <td class="td-actions">',
             '        <button class="btn-table btn-editer" data-id="' + p.id + '">Modifier</button>',
             '        <button class="btn-table btn-supprimer-prod" data-id="' + p.id + '">Supprimer</button>',
@@ -190,14 +203,17 @@ function initialiserBoutons() {
     document.getElementById('btn-ouvrir-ajout').addEventListener('click', ouvrirAjout);
     document.getElementById('btn-annuler').addEventListener('click', fermerFormulaire);
     document.getElementById('btn-sauvegarder').addEventListener('click', sauvegarder);
+    document.getElementById('btn-ajouter-variante').addEventListener('click', ajouterVarianteVide);
     initialiserImageUpload();
 }
 
 function ouvrirAjout() {
     idEnEdition  = null;
     imageEnCours = null;
+    variantesEnCours = [];
     document.getElementById('titre-formulaire').textContent = 'Ajouter un produit';
     viderFormulaire();
+    rendreListeVariantes();
     document.getElementById('formulaire-admin').style.display = 'block';
     document.getElementById('formulaire-admin').scrollIntoView({ behavior: 'smooth' });
 }
@@ -209,6 +225,9 @@ function ouvrirEdition(id) {
 
     idEnEdition  = id;
     imageEnCours = null; // pas de changement par defaut
+    variantesEnCours = Array.isArray(produit.variantes)
+        ? produit.variantes.map(function(v) { return { nom: v.nom || '', couleur: v.couleur || '#cccccc', stock: typeof v.stock === 'number' ? v.stock : 0 }; })
+        : [];
 
     document.getElementById('titre-formulaire').textContent = 'Modifier le produit';
     document.getElementById('champ-id').value          = produit.id;
@@ -217,6 +236,7 @@ function ouvrirEdition(id) {
     document.getElementById('champ-prix').value        = produit.prix;
     document.getElementById('champ-stock').value       = produit.stock;
     document.getElementById('champ-description').value = produit.description;
+    rendreListeVariantes();
 
     // Charger l'image existante si dispo
     var imgStockee = localStorage.getItem('img_' + id);
@@ -244,6 +264,8 @@ function viderFormulaire() {
     document.getElementById('champ-prix').value        = '';
     document.getElementById('champ-stock').value       = '';
     document.getElementById('champ-description').value = '';
+    variantesEnCours = [];
+    rendreListeVariantes();
     reinitialiserPreviewImage();
 }
 
@@ -259,8 +281,23 @@ function sauvegarder() {
         return;
     }
 
-    var produits = lireProduits();
+    // Variantes : on ne garde que celles avec un nom non vide. Si presentes, le stock
+    // global du produit devient la somme des stocks des variantes (une seule source de verite).
+    var variantesValides = variantesEnCours
+        .map(function(v) {
+            return {
+                nom:     (v.nom || '').trim(),
+                couleur: v.couleur || '#cccccc',
+                stock:   Math.max(0, parseInt(v.stock) || 0)
+            };
+        })
+        .filter(function(v) { return v.nom.length > 0; });
 
+    if (variantesValides.length > 0) {
+        stock = variantesValides.reduce(function(s, v) { return s + v.stock; }, 0);
+    }
+
+    var produits = lireProduits();
     var idImageAffectee = null;
 
     if (idEnEdition === null) {
@@ -271,7 +308,8 @@ function sauvegarder() {
             prix:        prix,
             description: description,
             image:       categorie + '-' + prochainId + '.jpg',
-            stock:       stock
+            stock:       stock,
+            variantes:   variantesValides
         });
         if (imageEnCours) {
             localStorage.setItem('img_' + prochainId, imageEnCours);
@@ -285,6 +323,7 @@ function sauvegarder() {
                 produits[i].prix        = prix;
                 produits[i].stock       = stock;
                 produits[i].description = description;
+                produits[i].variantes   = variantesValides;
                 break;
             }
         }
@@ -406,6 +445,65 @@ function reinitialiserPreviewImage() {
     label.style.display   = 'block';
     btnSup.style.display  = 'none';
     input.value           = '';
+}
+
+// ============================================
+// VARIANTES (formulaire produit)
+// ============================================
+
+function rendreListeVariantes() {
+    var liste = document.getElementById('variantes-liste');
+    if (!liste) return;
+
+    if (variantesEnCours.length === 0) {
+        liste.innerHTML = '<p class="variantes-vide">Aucune variante. Le stock global ci-dessus sera utilise.</p>';
+        return;
+    }
+
+    liste.innerHTML = variantesEnCours.map(function(v, i) {
+        return [
+            '<div class="variante-item" data-index="' + i + '">',
+            '    <input type="text" placeholder="Nom (ex: Or, Argent, Rouge)" class="variante-nom" value="' + echapperHtml(v.nom || '') + '">',
+            '    <input type="color" class="variante-couleur" value="' + (v.couleur || '#cccccc') + '">',
+            '    <input type="number" placeholder="Stock" class="variante-stock" value="' + (typeof v.stock === 'number' ? v.stock : 0) + '" min="0">',
+            '    <button type="button" class="btn-retirer-variante" data-index="' + i + '" title="Retirer cette variante">&times;</button>',
+            '</div>'
+        ].join('');
+    }).join('');
+
+    liste.querySelectorAll('.variante-nom').forEach(function(input) {
+        input.addEventListener('input', function() {
+            var i = parseInt(input.closest('.variante-item').getAttribute('data-index'));
+            variantesEnCours[i].nom = input.value;
+        });
+    });
+    liste.querySelectorAll('.variante-couleur').forEach(function(input) {
+        input.addEventListener('input', function() {
+            var i = parseInt(input.closest('.variante-item').getAttribute('data-index'));
+            variantesEnCours[i].couleur = input.value;
+        });
+    });
+    liste.querySelectorAll('.variante-stock').forEach(function(input) {
+        input.addEventListener('input', function() {
+            var i = parseInt(input.closest('.variante-item').getAttribute('data-index'));
+            variantesEnCours[i].stock = Math.max(0, parseInt(input.value) || 0);
+        });
+    });
+    liste.querySelectorAll('.btn-retirer-variante').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var i = parseInt(btn.getAttribute('data-index'));
+            variantesEnCours.splice(i, 1);
+            rendreListeVariantes();
+        });
+    });
+}
+
+function ajouterVarianteVide() {
+    variantesEnCours.push({ nom: '', couleur: '#cccccc', stock: 0 });
+    rendreListeVariantes();
+    // Focus sur le dernier champ nom ajoute
+    var inputs = document.querySelectorAll('.variante-nom');
+    if (inputs.length > 0) inputs[inputs.length - 1].focus();
 }
 
 // ============================================
