@@ -606,10 +606,18 @@ function chargerThemeExistant() {
 
 function lireProduits() {
     var stockCustom = localStorage.getItem(PRODUITS_CLE);
+    var liste;
     if (stockCustom) {
-        try { return JSON.parse(stockCustom); } catch (e) {}
+        try { liste = JSON.parse(stockCustom); } catch (e) {}
     }
-    return PRODUITS_DEFAUT.map(function(p) { return Object.assign({}, p); });
+    if (!Array.isArray(liste)) {
+        liste = PRODUITS_DEFAUT.map(function(p) { return Object.assign({}, p); });
+    }
+    // Filtre les categories qui n'existent plus (ex: anciens "collier" en Firestore).
+    // La sauvegarde suivante propagera la liste nettoyee vers Firestore.
+    return liste.filter(function(p) {
+        return p && CATEGORIES_VALIDES.indexOf(p.categorie) !== -1;
+    });
 }
 
 function sauvegarderProduits(produits) {

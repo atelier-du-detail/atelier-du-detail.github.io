@@ -63,17 +63,28 @@ var PRODUITS_DEFAUT = [
   }
 ];
 
+// Categories valides actuellement vendues. Tout produit ayant une autre
+// categorie (ex: ancien "collier" reste en Firestore) est filtre — la liste
+// affichee ne contient donc jamais de produit hors catalogue actuel.
+var CATEGORIES_VALIDES = ['bracelet', 'foulard'];
+
+function categorieEstValide(p) {
+    return p && CATEGORIES_VALIDES.indexOf(p.categorie) !== -1;
+}
+
 // Charge les produits : version admin (localStorage) ou liste par defaut
 var PRODUITS;
 (function() {
     var stockCustom = localStorage.getItem('produits_custom');
+    var liste;
     if (stockCustom) {
         try {
-            PRODUITS = JSON.parse(stockCustom);
+            liste = JSON.parse(stockCustom);
         } catch (e) {
-            PRODUITS = PRODUITS_DEFAUT;
+            liste = PRODUITS_DEFAUT;
         }
     } else {
-        PRODUITS = PRODUITS_DEFAUT;
+        liste = PRODUITS_DEFAUT;
     }
+    PRODUITS = Array.isArray(liste) ? liste.filter(categorieEstValide) : [];
 })();
