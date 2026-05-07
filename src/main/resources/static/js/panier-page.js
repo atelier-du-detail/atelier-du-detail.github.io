@@ -3,7 +3,7 @@
 // ============================================
 
 var FRAIS_LIVRAISON           = 4.90;
-var SEUIL_LIVRAISON_GRATUITE  = 60;
+var SEUIL_LIVRAISON_GRATUITE  = 35;
 
 var CODES_PROMO = {
     'BIENVENUE10': { remise: 0.10, label: '10% de reduction' },

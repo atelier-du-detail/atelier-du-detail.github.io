@@ -84,7 +84,7 @@ function afficherProduit(produit) {
         '        </div>',
 
         '        <div class="produit-garanties">',
-        '            <div class="produit-garantie"><span class="garantie-point"></span>Livraison offerte des 60 &#8364;</div>',
+        '            <div class="produit-garantie"><span class="garantie-point"></span>Livraison offerte des 35 &#8364;</div>',
         '            <div class="produit-garantie"><span class="garantie-point"></span>Retours gratuits sous 14 jours</div>',
         '            <div class="produit-garantie"><span class="garantie-point"></span>Paiement 100% securise</div>',
         '        </div>',

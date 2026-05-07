@@ -4,7 +4,7 @@
 // ============================================
 
 var FRAIS_LIVRAISON_CAISSE   = 4.90;
-var SEUIL_LIVRAISON_CAISSE   = 60;
+var SEUIL_LIVRAISON_CAISSE   = 35;
 
 document.addEventListener('DOMContentLoaded', function() {
     var articles = getPanier();
