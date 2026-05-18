@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paiement — L'Atelier du Detail</title>
+    <title>Paiement — L'Atelier du Détail</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -17,23 +17,23 @@
 
     <div class="page-titre fade-in">
         <h1>Finaliser la commande</h1>
-        <p>Renseignez vos coordonnees pour valider votre commande</p>
+        <p>Renseignez vos coordonnées pour valider votre commande</p>
     </div>
 
     <section class="caisse-section" id="caisse-section">
 
         <div class="caisse-grille">
 
-            <!-- Colonne gauche : coordonnees + paiement -->
+            <!-- Colonne gauche : coordonnées + paiement -->
             <div class="caisse-colonne">
 
                 <div class="caisse-card">
-                    <h2 class="caisse-titre">Vos coordonnees</h2>
+                    <h2 class="caisse-titre">Vos coordonnées</h2>
                     <form id="form-caisse" novalidate>
 
                         <div class="caisse-ligne-double">
                             <div class="caisse-champ">
-                                <label for="caisse-prenom">Prenom</label>
+                                <label for="caisse-prenom">Prénom</label>
                                 <input type="text" id="caisse-prenom" class="caisse-input" placeholder="Sophie" autocomplete="given-name" required>
                             </div>
                             <div class="caisse-champ">
@@ -68,7 +68,7 @@
                             <h2 class="caisse-titre">Informations de paiement</h2>
 
                             <div class="caisse-champ">
-                                <label for="carte-numero">Numero de carte</label>
+                                <label for="carte-numero">Numéro de carte</label>
                                 <input type="text" id="carte-numero" class="caisse-input" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number" required>
                             </div>
 
@@ -91,7 +91,7 @@
                         </button>
 
                         <p class="caisse-securite">
-                            Paiement simule — aucune donnee bancaire reelle n'est traitee.
+                            Paiement simulé — aucune donnée bancaire réelle n'est traitée.
                         </p>
 
                     </form>
@@ -99,7 +99,7 @@
 
             </div>
 
-            <!-- Colonne droite : recapitulatif -->
+            <!-- Colonne droite : récapitulatif -->
             <div class="caisse-colonne">
                 <div class="caisse-card caisse-card--recap" id="caisse-recap">
                     <h2 class="caisse-titre">Votre commande</h2>

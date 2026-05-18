@@ -23,8 +23,8 @@ function construireNav() {
     }).join('');
 
     var nomPrincipal  = echapperHtml(localStorage.getItem('site_nom'))      || "L'Atelier";
-    var nomSecondaire = echapperHtml(localStorage.getItem('site_sous_nom')) || 'du Detail';
-    var annonce       = echapperHtml(localStorage.getItem('site_annonce'))  || 'Livraison offerte en France metropolitaine des 35 &#8364;';
+    var nomSecondaire = echapperHtml(localStorage.getItem('site_sous_nom')) || 'du Détail';
+    var annonce       = echapperHtml(localStorage.getItem('site_annonce'))  || 'Livraison offerte en France métropolitaine dès 35 &#8364;';
 
     return [
         '<div class="barre-annonce">',
@@ -62,8 +62,8 @@ function construireFooter() {
     return [
         '<footer class="footer">',
         '    <div class="footer-newsletter">',
-        '        <h3>Restez inspires</h3>',
-        '        <p>Nouvelles collections, offres exclusives — directement dans votre boite mail.</p>',
+        '        <h3>Restez inspirés</h3>',
+        '        <p>Nouvelles collections, offres exclusives — directement dans votre boîte mail.</p>',
         '        <form class="newsletter-form" onsubmit="soumettreNewsletter(event)">',
         '            <input type="email" class="newsletter-input" placeholder="Votre adresse email" required>',
         '            <button type="submit" class="newsletter-btn">S\'inscrire</button>',
@@ -71,8 +71,8 @@ function construireFooter() {
         '    </div>',
         '    <div class="footer-grille">',
         '        <div class="footer-bloc">',
-        '            <h4 class="footer-logo">L\'Atelier du Detail</h4>',
-        '            <p>Des accessoires feminins selectionnes avec soin, pour sublimer chaque detail de votre style.</p>',
+        '            <h4 class="footer-logo">L\'Atelier du Détail</h4>',
+        '            <p>Des accessoires féminins sélectionnés avec soin, pour sublimer chaque détail de votre tenue.</p>',
         '        </div>',
         '        <div class="footer-bloc">',
         '            <h4>Navigation</h4>',
@@ -98,7 +98,7 @@ function construireFooter() {
         '        </div>',
         '    </div>',
         '    <div class="footer-bas">',
-        '        <p>&#169; 2025 L\'Atelier du Detail. Tous droits reserves.</p>',
+        '        <p>&#169; 2025 L\'Atelier du Détail. Tous droits réservés.</p>',
         '    </div>',
         '</footer>'
     ].join('');

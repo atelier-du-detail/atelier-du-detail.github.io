@@ -67,7 +67,7 @@ function afficherProduits(produits) {
     var grille = document.getElementById('produits-grille');
 
     if (produits.length === 0) {
-        grille.innerHTML = '<p class="chargement">Aucun produit trouve.</p>';
+        grille.innerHTML = '<p class="chargement">Aucun produit trouvé.</p>';
         return;
     }
 
@@ -95,14 +95,14 @@ function creerCarteProduit(produit) {
         : '';
 
     var btnDisabled = rupture ? ' disabled' : '';
-    var btnTexte    = rupture ? 'Epuise' : (aDesVariantes ? 'Choisir' : 'Ajouter');
+    var btnTexte    = rupture ? 'Épuisé' : (aDesVariantes ? 'Choisir' : 'Ajouter');
 
     var pastillesHtml = '';
     if (aDesVariantes) {
         pastillesHtml = '<div class="carte-produit-variantes">' +
             produit.variantes.slice(0, 5).map(function(v) {
                 var rupVar = (v.stock || 0) === 0;
-                return '<span class="variante-pastille' + (rupVar ? ' variante-pastille--rupture' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '" title="' + echapperHtml(v.nom || '') + (rupVar ? ' (epuise)' : '') + '"></span>';
+                return '<span class="variante-pastille' + (rupVar ? ' variante-pastille--rupture' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '" title="' + echapperHtml(v.nom || '') + (rupVar ? ' (épuisé)' : '') + '"></span>';
             }).join('') +
             (produit.variantes.length > 5 ? '<span class="variante-plus">+' + (produit.variantes.length - 5) + '</span>' : '') +
         '</div>';
@@ -234,7 +234,7 @@ function afficherNotif(nomProduit) {
     notif.innerHTML =
         '<span class="notif-point"></span>' +
         '<div class="notif-texte">' +
-            '<span class="notif-titre">Ajoute au panier</span>' +
+            '<span class="notif-titre">Ajouté au panier</span>' +
             '<span class="notif-nom">' + echapperHtml(nomProduit) + '</span>' +
         '</div>' +
         '<a href="panier.html" class="notif-voir">Voir le panier</a>';

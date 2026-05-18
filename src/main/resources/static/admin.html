@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administration — L'Atelier du Detail</title>
+    <title>Administration — L'Atelier du Détail</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
@@ -12,7 +12,7 @@
     <!-- ECRAN DE CONNEXION -->
     <div id="ecran-login" class="login-ecran">
         <div class="login-carte">
-            <h1 class="login-titre">L'Atelier du Detail</h1>
+            <h1 class="login-titre">L'Atelier du Détail</h1>
             <p class="login-sous-titre">Espace administration</p>
 
             <form id="formulaire-login" novalidate>
@@ -41,7 +41,7 @@
                 <a href="#" class="sidebar-lien" data-section="commandes">Commandes</a>
                 <a href="index.html" class="sidebar-lien sidebar-lien--externe" target="_blank">Voir la boutique</a>
             </nav>
-            <button class="btn-deconnexion" id="btn-deconnexion">Se deconnecter</button>
+            <button class="btn-deconnexion" id="btn-deconnexion">Se déconnecter</button>
         </aside>
 
         <!-- Contenu principal -->
@@ -65,10 +65,10 @@
                     <div class="admin-form-grille">
                         <div class="champ-groupe">
                             <label for="champ-nom">Nom</label>
-                            <input type="text" id="champ-nom" placeholder="Ex: Bracelet Dore Fin">
+                            <input type="text" id="champ-nom" placeholder="Ex: Bracelet Doré Fin">
                         </div>
                         <div class="champ-groupe">
-                            <label for="champ-categorie">Categorie</label>
+                            <label for="champ-categorie">Catégorie</label>
                             <select id="champ-categorie">
                                 <option value="bracelet">Bracelet</option>
                                 <option value="foulard">Foulard</option>
@@ -90,7 +90,7 @@
                         <!-- VARIANTES (couleurs + stock par variante) -->
                         <div class="champ-groupe champ-groupe--pleine-largeur">
                             <label>Variantes (couleurs et stocks)</label>
-                            <p class="champ-aide">Optionnel. Si tu ajoutes des variantes, le stock global ci-dessus est ignore et chaque variante a son propre stock.</p>
+                            <p class="champ-aide">Optionnel. Si tu ajoutes des variantes, le stock global ci-dessus est ignoré et chaque variante a son propre stock.</p>
                             <div class="variantes-liste" id="variantes-liste"></div>
                             <button type="button" class="btn-ajouter-variante" id="btn-ajouter-variante">+ Ajouter une variante</button>
                         </div>
@@ -103,7 +103,7 @@
                                 <div class="image-upload-label" id="image-upload-label">
                                     Cliquer pour choisir une photo (JPG, PNG)
                                 </div>
-                                <img id="image-preview" class="image-preview" alt="Apercu" style="display:none">
+                                <img id="image-preview" class="image-preview" alt="Aperçu" style="display:none">
                             </div>
                             <button type="button" class="btn-supprimer-image" id="btn-supprimer-image" style="display:none">
                                 Supprimer l'image
@@ -125,7 +125,7 @@
                                 <th>ID</th>
                                 <th>Image</th>
                                 <th>Nom</th>
-                                <th>Categorie</th>
+                                <th>Catégorie</th>
                                 <th>Prix</th>
                                 <th>Stock</th>
                                 <th>Actions</th>
@@ -162,7 +162,7 @@
                                 <span class="couleur-desc">Prix, badges, bouton commander</span>
                             </div>
                             <div class="couleur-item">
-                                <label>Couleur doree</label>
+                                <label>Couleur dorée</label>
                                 <div class="couleur-input-groupe">
                                     <input type="color" id="color-or" value="#b8895a">
                                     <span class="couleur-valeur" id="val-or">#b8895a</span>
@@ -175,7 +175,7 @@
                                     <input type="color" id="color-fond" value="#fdf8f5">
                                     <span class="couleur-valeur" id="val-fond">#fdf8f5</span>
                                 </div>
-                                <span class="couleur-desc">Arriere-plan general</span>
+                                <span class="couleur-desc">Arrière-plan général</span>
                             </div>
                             <div class="couleur-item">
                                 <label>Couleur du texte</label>
@@ -198,23 +198,23 @@
 
                     <!-- Police -->
                     <div class="apparence-carte">
-                        <h3 class="apparence-titre">Police d'ecriture</h3>
+                        <h3 class="apparence-titre">Police d'écriture</h3>
                         <div class="police-liste">
                             <label class="police-option">
                                 <input type="radio" name="police" value="Georgia, serif" checked>
-                                <span class="police-apercu" style="font-family: Georgia, serif">Georgia — Elegant et classique</span>
+                                <span class="police-apercu" style="font-family: Georgia, serif">Georgia — Élégant et classique</span>
                             </label>
                             <label class="police-option">
                                 <input type="radio" name="police" value="'Palatino Linotype', Palatino, serif">
-                                <span class="police-apercu" style="font-family: 'Palatino Linotype', Palatino, serif">Palatino — Raffine et lisible</span>
+                                <span class="police-apercu" style="font-family: 'Palatino Linotype', Palatino, serif">Palatino — Raffiné et lisible</span>
                             </label>
                             <label class="police-option">
                                 <input type="radio" name="police" value="Garamond, 'EB Garamond', serif">
-                                <span class="police-apercu" style="font-family: Garamond, serif">Garamond — Traditionnel et delicat</span>
+                                <span class="police-apercu" style="font-family: Garamond, serif">Garamond — Traditionnel et délicat</span>
                             </label>
                             <label class="police-option">
                                 <input type="radio" name="police" value="'Book Antiqua', Palatino, serif">
-                                <span class="police-apercu" style="font-family: 'Book Antiqua', Palatino, serif">Book Antiqua — Doux et feminin</span>
+                                <span class="police-apercu" style="font-family: 'Book Antiqua', Palatino, serif">Book Antiqua — Doux et féminin</span>
                             </label>
                             <label class="police-option">
                                 <input type="radio" name="police" value="'Times New Roman', Times, serif">
@@ -232,18 +232,18 @@
                         </div>
                         <div class="champ-groupe">
                             <label for="champ-sous-nom">Sous-titre logo</label>
-                            <input type="text" id="champ-sous-nom" placeholder="du Detail">
+                            <input type="text" id="champ-sous-nom" placeholder="du Détail">
                         </div>
                         <div class="champ-groupe">
                             <label for="champ-annonce">Barre d'annonce</label>
-                            <input type="text" id="champ-annonce" placeholder="Livraison offerte des 35 EUR">
+                            <input type="text" id="champ-annonce" placeholder="Livraison offerte dès 35 EUR">
                         </div>
                     </div>
 
                     <!-- Images des collections (cartes page d'accueil) -->
                     <div class="apparence-carte">
                         <h3 class="apparence-titre">Images des collections</h3>
-                        <p class="apparence-aide">Photos affichees comme fond des cartes Bracelets et Foulards sur la page d'accueil. Si aucune photo, le fond colore par defaut est conserve.</p>
+                        <p class="apparence-aide">Photos affichées comme fond des cartes Bracelets et Foulards sur la page d'accueil. Si aucune photo, le fond coloré par défaut est conservé.</p>
 
                         <div class="champ-groupe champ-groupe--pleine-largeur">
                             <label>Image — Bracelets</label>
@@ -252,7 +252,7 @@
                                 <div class="image-upload-label" id="image-bracelet-label">
                                     Cliquer pour choisir une photo (JPG, PNG)
                                 </div>
-                                <img id="image-bracelet-preview" class="image-preview" alt="Apercu" style="display:none">
+                                <img id="image-bracelet-preview" class="image-preview" alt="Aperçu" style="display:none">
                             </div>
                             <button type="button" class="btn-supprimer-image" id="btn-supprimer-image-bracelet" style="display:none">
                                 Supprimer l'image
@@ -266,7 +266,7 @@
                                 <div class="image-upload-label" id="image-foulard-label">
                                     Cliquer pour choisir une photo (JPG, PNG)
                                 </div>
-                                <img id="image-foulard-preview" class="image-preview" alt="Apercu" style="display:none">
+                                <img id="image-foulard-preview" class="image-preview" alt="Aperçu" style="display:none">
                             </div>
                             <button type="button" class="btn-supprimer-image" id="btn-supprimer-image-foulard" style="display:none">
                                 Supprimer l'image
@@ -278,13 +278,13 @@
 
                 <!-- Actions -->
                 <div class="apparence-actions">
-                    <button class="btn-admin-principal" id="btn-sauvegarder-theme">Sauvegarder le theme</button>
-                    <button class="btn-admin-secondaire" id="btn-reinitialiser-theme">Reinitialiser par defaut</button>
+                    <button class="btn-admin-principal" id="btn-sauvegarder-theme">Sauvegarder le thème</button>
+                    <button class="btn-admin-secondaire" id="btn-reinitialiser-theme">Réinitialiser par défaut</button>
                     <a href="index.html" target="_blank" class="btn-admin-secondaire btn-apercu-lien">Voir la boutique</a>
                 </div>
 
                 <div class="apparence-confirmation" id="apparence-confirmation" style="display:none">
-                    Theme sauvegarde. Les modifications sont visibles sur la boutique.
+                    Thème sauvegardé. Les modifications sont visibles sur la boutique.
                 </div>
 
             </section>
@@ -297,8 +297,8 @@
                     <h2>Commandes</h2>
                 </div>
                 <div class="admin-vide">
-                    <p>Les commandes apparaitront ici une fois le paiement Stripe configure.</p>
-                    <p>Cette section sera completee a l'etape suivante.</p>
+                    <p>Les commandes apparaîtront ici une fois le paiement Stripe configuré.</p>
+                    <p>Cette section sera complétée à l'étape suivante.</p>
                 </div>
             </section>
 

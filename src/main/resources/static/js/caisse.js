@@ -60,7 +60,7 @@ function afficherRecapCommande(articles) {
 
     var ligneRemise = remise > 0
         ? '<div class="recap-caisse-ligne recap-caisse-ligne--remise">' +
-              '<span>Reduction</span>' +
+              '<span>Réduction</span>' +
               '<span>- ' + remise.toFixed(2) + ' &#8364;</span>' +
           '</div>'
         : '';

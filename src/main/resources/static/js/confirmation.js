@@ -43,7 +43,7 @@ function afficherSucces(section) {
     }).join('');
 
     var ligneTotal = total
-        ? '<div class="conf-article conf-article--total"><span>Total paye</span><span>' + total + ' &#8364;</span></div>'
+        ? '<div class="conf-article conf-article--total"><span>Total payé</span><span>' + total + ' &#8364;</span></div>'
         : '';
 
     var refCommande = 'ATL-' + Date.now().toString().substring(5);
@@ -51,19 +51,19 @@ function afficherSucces(section) {
     section.innerHTML =
         '<div class="confirmation-carte fade-in">' +
             '<div class="conf-icone conf-icone--succes">&#10003;</div>' +
-            '<h1 class="conf-titre">Commande confirmee</h1>' +
+            '<h1 class="conf-titre">Commande confirmée</h1>' +
             '<p class="conf-sous-titre">Merci ' + (client ? echapperHtml(client.prenom) : '') + ' pour votre achat !</p>' +
-            '<div class="conf-ref">Reference : <strong>' + refCommande + '</strong></div>' +
+            '<div class="conf-ref">Référence : <strong>' + refCommande + '</strong></div>' +
             (client && client.email
-                ? '<p class="conf-email">Un recapitulatif a ete envoye a <strong>' + echapperHtml(client.email) + '</strong></p>'
+                ? '<p class="conf-email">Un récapitulatif a été envoyé à <strong>' + echapperHtml(client.email) + '</strong></p>'
                 : '') +
             (lignesArticles
                 ? '<div class="conf-articles">' + lignesArticles + ligneTotal + '</div>'
                 : '') +
-            '<p class="conf-livraison">Livraison estimee : <strong>' + calculerLivraisonConf() + '</strong></p>' +
+            '<p class="conf-livraison">Livraison estimée : <strong>' + calculerLivraisonConf() + '</strong></p>' +
             '<div class="conf-actions">' +
                 '<a href="catalogue.html" class="btn-principal">Continuer mes achats</a>' +
-                '<a href="index.html" class="btn-secondaire">Retour a l\'accueil</a>' +
+                '<a href="index.html" class="btn-secondaire">Retour à l\'accueil</a>' +
             '</div>' +
         '</div>';
 }
@@ -76,11 +76,11 @@ function afficherEchec(section) {
     section.innerHTML =
         '<div class="confirmation-carte fade-in">' +
             '<div class="conf-icone conf-icone--echec">&#10007;</div>' +
-            '<h1 class="conf-titre">Paiement echoue</h1>' +
-            '<p>Votre paiement n\'a pas pu etre traite.</p>' +
-            '<p>Verifiez vos informations et reessayez.</p>' +
+            '<h1 class="conf-titre">Paiement échoué</h1>' +
+            '<p>Votre paiement n\'a pas pu être traité.</p>' +
+            '<p>Vérifiez vos informations et réessayez.</p>' +
             '<div class="conf-actions">' +
-                '<a href="caisse.html" class="btn-principal">Reessayer</a>' +
+                '<a href="caisse.html" class="btn-principal">Réessayer</a>' +
                 '<a href="panier.html" class="btn-secondaire">Retour au panier</a>' +
             '</div>' +
         '</div>';
@@ -106,7 +106,7 @@ function lireArticlesSauvegardes() {
 
 function calculerLivraisonConf() {
     var jours = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-    var mois  = ['jan.', 'fev.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dec.'];
+    var mois  = ['jan.', 'fév.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
     var date  = new Date();
     date.setDate(date.getDate() + 5);
     while (date.getDay() === 0 || date.getDay() === 6) {

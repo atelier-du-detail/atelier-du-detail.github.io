@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var bandeau = document.createElement('div');
     bandeau.className = 'cookie-bandeau';
     bandeau.innerHTML =
-        '<p>Nous utilisons des cookies pour ameliorer votre experience. ' +
-        'En continuant a naviguer, vous acceptez notre politique de confidentialite.</p>' +
+        '<p>Nous utilisons des cookies pour améliorer votre expérience. ' +
+        'En continuant à naviguer, vous acceptez notre politique de confidentialité.</p>' +
         '<div class="cookie-boutons">' +
             '<button class="btn-cookie-refuser">Refuser</button>' +
             '<button class="btn-cookie-accepter">Accepter</button>' +

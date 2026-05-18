@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!produit) { afficherErreur(); return; }
 
-    document.title = produit.nom + ' — L\'Atelier du Detail';
+    document.title = produit.nom + ' — L\'Atelier du Détail';
     afficherProduit(produit);
     afficherProduitsRelies(produit);
 });
@@ -47,7 +47,7 @@ function afficherProduit(produit) {
     var favori      = estFavori(produit.id);
 
     var badgeStock = '';
-    if (rupture)          badgeStock = '<span class="produit-badge-stock produit-badge-stock--rouge" id="badge-stock">Epuise</span>';
+    if (rupture)          badgeStock = '<span class="produit-badge-stock produit-badge-stock--rouge" id="badge-stock">Épuisé</span>';
     else if (stockFaible) badgeStock = '<span class="produit-badge-stock produit-badge-stock--orange" id="badge-stock">Plus que ' + stockEffectif + ' en stock</span>';
     else                  badgeStock = '<span class="produit-badge-stock produit-badge-stock--vert" id="badge-stock">En stock</span>';
 
@@ -59,7 +59,7 @@ function afficherProduit(produit) {
             '    <div class="produit-variantes-pastilles" id="produit-variantes-pastilles">',
             produit.variantes.map(function(v, i) {
                 var rup = (v.stock || 0) === 0;
-                return '<button type="button" class="variante-pastille-grande' + (i === varianteIndex ? ' actif' : '') + (rup ? ' variante-pastille--rupture' : '') + '" data-index="' + i + '" title="' + echapperHtml(v.nom) + (rup ? ' (epuise)' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '"' + (rup ? ' disabled' : '') + '></button>';
+                return '<button type="button" class="variante-pastille-grande' + (i === varianteIndex ? ' actif' : '') + (rup ? ' variante-pastille--rupture' : '') + '" data-index="' + i + '" title="' + echapperHtml(v.nom) + (rup ? ' (épuisé)' : '') + '" style="background-color:' + echapperHtml(v.couleur || '#ccc') + '"' + (rup ? ' disabled' : '') + '></button>';
             }).join(''),
             '    </div>',
             '</div>'
@@ -102,7 +102,7 @@ function afficherProduit(produit) {
 
         '        <div class="produit-actions">',
         '            <div class="produit-quantite-wrapper">',
-        '                <label class="produit-label">Quantite</label>',
+        '                <label class="produit-label">Quantité</label>',
         '                <div class="panier-article-quantite">',
         '                    <button class="btn-quantite" id="btn-moins">&#8722;</button>',
         '                    <span class="valeur-quantite" id="valeur-qte">1</span>',
@@ -110,14 +110,14 @@ function afficherProduit(produit) {
         '                </div>',
         '            </div>',
         '            <button class="btn-commander produit-btn-panier"' + (rupture ? ' disabled' : '') + ' id="btn-panier">',
-        '                ' + (rupture ? 'Produit epuise' : 'Ajouter au panier'),
+        '                ' + (rupture ? 'Produit épuisé' : 'Ajouter au panier'),
         '            </button>',
         '        </div>',
 
         '        <div class="produit-garanties">',
-        '            <div class="produit-garantie"><span class="garantie-point"></span>Livraison offerte des 35 &#8364;</div>',
+        '            <div class="produit-garantie"><span class="garantie-point"></span>Livraison offerte dès 35 &#8364;</div>',
         '            <div class="produit-garantie"><span class="garantie-point"></span>Retours gratuits sous 14 jours</div>',
-        '            <div class="produit-garantie"><span class="garantie-point"></span>Paiement 100% securise</div>',
+        '            <div class="produit-garantie"><span class="garantie-point"></span>Paiement 100% sécurisé</div>',
         '        </div>',
         '    </div>',
         '</div>',
@@ -158,14 +158,14 @@ function initialiserActionsPage(produit, varianteIndexInitial) {
         var stock = stockActuel();
         var rup   = stock === 0;
         btnPanier.disabled = rup;
-        btnPanier.textContent = rup ? 'Produit epuise' : 'Ajouter au panier';
+        btnPanier.textContent = rup ? 'Produit épuisé' : 'Ajouter au panier';
 
         var badge = document.getElementById('badge-stock');
         if (badge) {
             badge.classList.remove('produit-badge-stock--rouge', 'produit-badge-stock--orange', 'produit-badge-stock--vert');
             if (rup) {
                 badge.classList.add('produit-badge-stock--rouge');
-                badge.textContent = 'Epuise';
+                badge.textContent = 'Épuisé';
             } else if (stock <= 3) {
                 badge.classList.add('produit-badge-stock--orange');
                 badge.textContent = 'Plus que ' + stock + ' en stock';
@@ -197,7 +197,7 @@ function initialiserActionsPage(produit, varianteIndexInitial) {
         var compteur = document.getElementById('panier-compteur');
         if (compteur) compteur.textContent = getPanierCount();
 
-        btnPanier.textContent = 'Ajoute !';
+        btnPanier.textContent = 'Ajouté !';
         btnPanier.style.backgroundColor = 'var(--or)';
         setTimeout(function() {
             btnPanier.textContent = 'Ajouter au panier';
@@ -259,7 +259,7 @@ function afficherProduitsRelies(produitActuel) {
     var section = document.getElementById('section-relies');
     section.innerHTML =
         '<div class="produits-relies">' +
-            '<h2 class="titre-section fade-in">Dans la meme collection</h2>' +
+            '<h2 class="titre-section fade-in">Dans la même collection</h2>' +
             '<span class="titre-section-trait fade-in"></span>' +
             '<div class="relies-grille">' + cartes + '</div>' +
         '</div>';

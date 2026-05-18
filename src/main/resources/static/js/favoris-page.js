@@ -16,7 +16,7 @@ function afficherFavoris() {
             '<div class="panier-vide fade-in" style="grid-column:1/-1">',
             '    <div class="panier-vide-icone"><div class="panier-vide-cercle"></div></div>',
             '    <h2 class="panier-vide-titre">Aucun favori pour le moment</h2>',
-            '    <p>Cliquez sur le coeur d\'un produit pour le retrouver ici.</p>',
+            '    <p>Cliquez sur le cœur d\'un produit pour le retrouver ici.</p>',
             '    <a href="catalogue.html" class="btn-principal" style="margin-top:1.5rem;display:inline-block">Voir le catalogue</a>',
             '</div>'
         ].join('');
@@ -57,7 +57,7 @@ function creerCarteFavori(produit) {
             '<div class="carte-produit-pied">' +
                 '<span class="carte-produit-prix">' + produit.prix.toFixed(2) + ' &#8364;</span>' +
                 '<button class="btn-ajouter"' + (rupture ? ' disabled' : '') + ' data-id="' + produit.id + '">' +
-                    (rupture ? 'Epuise' : 'Ajouter') +
+                    (rupture ? 'Épuisé' : 'Ajouter') +
                 '</button>' +
             '</div>' +
             '<button class="btn-retirer-favori" data-id="' + produit.id + '">Retirer des favoris</button>' +
@@ -71,7 +71,7 @@ function creerCarteFavori(produit) {
             ajouterAuPanier(produit);
             var compteur = document.getElementById('panier-compteur');
             if (compteur) compteur.textContent = getPanierCount();
-            btnAjouter.textContent = 'Ajoute';
+            btnAjouter.textContent = 'Ajouté';
             setTimeout(function() { btnAjouter.textContent = 'Ajouter'; }, 1500);
         });
     }

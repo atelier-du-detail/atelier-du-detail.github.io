@@ -6,8 +6,8 @@ var FRAIS_LIVRAISON           = 4.90;
 var SEUIL_LIVRAISON_GRATUITE  = 35;
 
 var CODES_PROMO = {
-    'BIENVENUE10': { remise: 0.10, label: '10% de reduction' },
-    'ATELIER15':   { remise: 0.15, label: '15% de reduction' }
+    'BIENVENUE10': { remise: 0.10, label: '10% de réduction' },
+    'ATELIER15':   { remise: 0.15, label: '15% de réduction' }
 };
 
 var codePromoActif = null;
@@ -35,7 +35,7 @@ function afficherPanier() {
             '<div class="panier-contenu">' +
                 '<div class="panier-articles">' +
                     '<div class="panier-articles-entete">' +
-                        '<h2>Votre selection</h2>' +
+                        '<h2>Votre sélection</h2>' +
                         '<span class="panier-nb-articles">' + getPanierCount() + ' article' + (getPanierCount() > 1 ? 's' : '') + '</span>' +
                     '</div>' +
                     articles.map(construireArticle).join('') +
@@ -69,7 +69,7 @@ function construirePanierVide() {
         '        <div class="panier-vide-cercle"></div>',
         '    </div>',
         '    <h2 class="panier-vide-titre">Votre panier est vide</h2>',
-        '    <p>Decouvrez nos collections et ajoutez vos pieces preferees.</p>',
+        '    <p>Découvrez nos collections et ajoutez vos pièces préférées.</p>',
         '    <a href="catalogue.html" class="btn-principal">Voir le catalogue</a>',
         '</div>'
     ].join('');
@@ -92,7 +92,7 @@ function construireArticle(article) {
         '        <span class="panier-article-categorie">' + article.categorie + '</span>',
         '        <h3 class="panier-article-nom">' + article.nom + '</h3>',
         '        ' + blocVariante,
-        '        <span class="panier-article-prix-unit">' + article.prix.toFixed(2) + ' &#8364; / piece</span>',
+        '        <span class="panier-article-prix-unit">' + article.prix.toFixed(2) + ' &#8364; / pièce</span>',
         '    </div>',
         '    <div class="panier-article-droite">',
         '        <div class="panier-article-quantite">',
@@ -139,7 +139,7 @@ function construireRecap() {
     return [
         '<div class="panier-recap fade-in">',
 
-        '    <h2>Recapitulatif</h2>',
+        '    <h2>Récapitulatif</h2>',
 
         bandeau_promo,
 
@@ -149,7 +149,7 @@ function construireRecap() {
         '        <button id="btn-appliquer-promo" class="btn-appliquer">Appliquer</button>',
         '    </div>',
         codePromoActif
-            ? '<p class="recap-code-actif">Code <strong>' + codePromoActif + '</strong> applique</p>'
+            ? '<p class="recap-code-actif">Code <strong>' + codePromoActif + '</strong> appliqué</p>'
             : '',
 
         // Lignes de calcul
@@ -173,7 +173,7 @@ function construireRecap() {
         '    <p class="recap-tva">TVA 20% incluse : ' + (total * 0.2 / 1.2).toFixed(2) + ' &#8364;</p>',
 
         // Livraison estimee
-        '    <p class="recap-livraison-date">Livraison estimee : <strong>' + livraison_estimee + '</strong></p>',
+        '    <p class="recap-livraison-date">Livraison estimée : <strong>' + livraison_estimee + '</strong></p>',
 
         // Bouton commander
         '    <button class="btn-commander" id="btn-commander">Passer la commande</button>',
@@ -182,7 +182,7 @@ function construireRecap() {
 
         // Badges de confiance
         '    <div class="recap-badges">',
-        '        <div class="badge-confiance">Paiement securise</div>',
+        '        <div class="badge-confiance">Paiement sécurisé</div>',
         '        <div class="badge-confiance">Retours gratuits 14j</div>',
         '        <div class="badge-confiance">SAV disponible</div>',
         '    </div>',
@@ -266,7 +266,7 @@ function trouverArticle(id, varianteNom) {
 
 function calculerLivraisonEstimee() {
     var jours = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-    var mois  = ['jan.', 'fev.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'aout', 'sept.', 'oct.', 'nov.', 'dec.'];
+    var mois  = ['jan.', 'fév.', 'mar.', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
     var date  = new Date();
     date.setDate(date.getDate() + 5);
     // Sauter les weekends
